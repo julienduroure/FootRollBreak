@@ -7,7 +7,6 @@ bl_info = {
 	"category": "Rigging",   
 }
 
-#TODO implement check_rigify_type
 #TODO implement patch_pitchipoy
 #TODO panel when already patched
 
@@ -17,7 +16,14 @@ import math
 
 
 def check_rigify_type(obj):
-	return 'HUMAN' #TODO
+	human = "MCH-foot.L.roll.01"
+	pitchipoy = "MCH-heel.02_roll.L.001"
+	if human in obj.data.bones:
+		return 'HUMAN'
+	elif pitchipoy in obj.data.bones:
+		return 'PITCHIPOY'
+	else:
+		return 'UNKNOWN'
 
 class DATA_PT_rigify_patch(bpy.types.Panel):
 	bl_label = "Rigify RollBreak Patch"
