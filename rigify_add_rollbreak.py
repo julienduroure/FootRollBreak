@@ -4,16 +4,36 @@ bl_info = {
 	"version": (0, 0, 1),
 	"blender": (2,77, 0),
 	"description": "Add Roll Break to Rigify",
-	"category": "Rigging",	 
+	"category": "Rigging",   
 }
 
-#TODO add Panel
 #TODO implement check_rigify_type
 #TODO implement patch_pitchipoy
+#TODO panel when already patched
 
 import bpy
 from mathutils import Vector
 import math
+
+
+def check_rigify_type(obj):
+	return 'HUMAN' #TODO
+
+class DATA_PT_rigify_patch(bpy.types.Panel):
+	bl_label = "Rigify RollBreak Patch"
+	bl_space_type = 'PROPERTIES'
+	bl_region_type = 'WINDOW'
+	bl_context = "data"
+
+	@classmethod
+	def poll(cls, context):
+		available = ['HUMAN','PITCHIPOY']
+		if not context.armature:
+			return False
+		return check_rigify_type(context.active_object) in available
+
+	def draw(self, context):
+		self.layout.operator("pose.patch_rigify", text="Patch RollBreak")
 
 class PatchRigify(bpy.types.Operator):
 	bl_idname = "pose.patch_rigify"
@@ -21,20 +41,17 @@ class PatchRigify(bpy.types.Operator):
 	
 	@classmethod
 	def poll(cls, context):
-		return context.active_object.type == 'ARMATURE'		
+		return context.active_object.type == 'ARMATURE' 	
 		
 	def execute(self, context):
 		obj = context.active_object
-		rigify_type = self.check_rigify_type(obj)
+		rigify_type = check_rigify_type(obj)
 		if rigify_type == 'HUMAN':
 			return self.patch_human(context)
 		elif rigify_type == 'PITCHIPOY':
 			pass #TODO
 		else: 
 			pass #TODO message unknown
-		
-	def check_rigify_type(self, obj):
-		return 'HUMAN' #TODO
 		
 	def patch_human(self, context):
 		# Force to be in edit mode
@@ -128,7 +145,7 @@ class PatchRigify(bpy.types.Operator):
 			
 			limit = obj.pose.bones[top].constraints.new(type='LIMIT_ROTATION')
 			limit.use_limit_x = True
-			limit.max_x       = math.pi / 2
+			limit.max_x 	  = math.pi / 2
 			limit.owner_space = 'LOCAL'
 			
 			bpy.ops.pose.select_all(action='DESELECT')
@@ -269,9 +286,11 @@ register()
 		
 def register():
 	bpy.utils.register_class(PatchRigify)
+	bpy.utils.register_class(DATA_PT_rigify_patch)
 	
 def unregister():
 	bpy.utils.unregister_class(PatchRigify)
+	bpy.utils.unregister_class(DATA_PT_rigify_patch)
 		
 if __name__ == "__main__":
 	register()
