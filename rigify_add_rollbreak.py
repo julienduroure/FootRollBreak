@@ -9,6 +9,9 @@ bl_info = {
 
 #TODO implement patch_pitchipoy
 #TODO panel when already patched
+#TODO panel : add text to display type
+#TODO replace slider by checkbox
+#TODO RollBreak, rollbreak, rollBreak, Roll Break, etc... : choose how to write it, and change label, class names, etc...
 
 import bpy
 from mathutils import Vector
