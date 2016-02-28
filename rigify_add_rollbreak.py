@@ -8,8 +8,6 @@ bl_info = {
 }
 
 #TODO implement patch_pitchipoy
-#TODO panel when already patched
-#TODO panel : add text to display type
 #TODO replace slider by checkbox
 #TODO RollBreak, rollbreak, rollBreak, Roll Break, etc... : choose how to write it, and change label, class names, etc...
 
@@ -17,14 +15,16 @@ import bpy
 from mathutils import Vector
 import math
 
+available = ['Human','Pitchipoy']
+
 
 def check_rigify_type(obj):
 	human = "MCH-foot.L.roll.01"
 	pitchipoy = "MCH-heel.02_roll.L.001"
 	if human in obj.data.bones:
-		return 'HUMAN'
+		return 'Human'
 	elif pitchipoy in obj.data.bones:
-		return 'PITCHIPOY'
+		return 'Pitchipoy'
 	else:
 		return 'UNKNOWN'
 
@@ -40,7 +40,6 @@ class DATA_PT_rigify_patch(bpy.types.Panel):
 
 	@classmethod
 	def poll(cls, context):
-		available = ['HUMAN','PITCHIPOY']
 		if not context.armature:
 			return False
 		return check_rigify_type(context.active_object) in available
@@ -48,8 +47,12 @@ class DATA_PT_rigify_patch(bpy.types.Panel):
 	def draw(self, context):
 		if not is_already_patched(context.active_object):
 			self.layout.operator("pose.patch_rigify", text="Patch RollBreak")
+			self.layout.label("detected type : ", icon="INFO")
+			self.layout.label(check_rigify_type(context.active_object))
 		else:
 			self.layout.label("already patched!", icon="INFO")
+					
+			
 
 class PatchRigify(bpy.types.Operator):
 	bl_idname = "pose.patch_rigify"
@@ -62,9 +65,9 @@ class PatchRigify(bpy.types.Operator):
 	def execute(self, context):
 		obj = context.active_object
 		rigify_type = check_rigify_type(obj)
-		if rigify_type == 'HUMAN':
+		if rigify_type == 'Human':
 			return self.patch_human(context)
-		elif rigify_type == 'PITCHIPOY':
+		elif rigify_type == 'Pitchipoy':
 			pass #TODO
 		else: 
 			pass #TODO message unknown
