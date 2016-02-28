@@ -28,6 +28,10 @@ def check_rigify_type(obj):
 	else:
 		return 'UNKNOWN'
 
+def is_already_patched(obj):
+	bone = "ORG-foot_roll.ik.L"
+	return bone in obj.data.bones
+
 class DATA_PT_rigify_patch(bpy.types.Panel):
 	bl_label = "Rigify RollBreak Patch"
 	bl_space_type = 'PROPERTIES'
@@ -42,7 +46,10 @@ class DATA_PT_rigify_patch(bpy.types.Panel):
 		return check_rigify_type(context.active_object) in available
 
 	def draw(self, context):
-		self.layout.operator("pose.patch_rigify", text="Patch RollBreak")
+		if not is_already_patched(context.active_object):
+			self.layout.operator("pose.patch_rigify", text="Patch RollBreak")
+		else:
+			self.layout.label("already patched!", icon="INFO")
 
 class PatchRigify(bpy.types.Operator):
 	bl_idname = "pose.patch_rigify"
