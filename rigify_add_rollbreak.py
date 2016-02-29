@@ -60,6 +60,58 @@ def def_geo(obj, bone_name, head, tail, roll):
 	obj.data.edit_bones[bone_name].tail = tail
 	obj.data.edit_bones[bone_name].roll = roll
 
+ui_text = '''
+import bpy
+
+rig_id = ###rig_id###
+
+class FootBreakUI(bpy.types.Panel):
+
+	bl_space_type = 'VIEW_3D'
+	bl_region_type = 'UI'
+	bl_label = "Foot Break"
+	bl_idname = rig_id + "_PT_footbreak_ui"
+
+
+	@classmethod
+	def poll(self, context):
+		if context.mode != 'POSE':
+			return False
+
+		try:
+			return (context.active_object.data.get("rig_id") == rig_id)
+		except (AttributeError, KeyError, TypeError):
+			return False
+		
+
+	def draw(self, context):
+		layout = self.layout
+		col = layout.column()
+		row = col.row()
+		row.prop(context.active_object.pose.bones["###bone###.L"], '["footbreak_onoff"]', text="Roll break (L)") 
+
+		if context.active_object.pose.bones["###bone###.L"]["footbreak_onoff"] == True:
+			row.prop(context.active_object.pose.bones["###bone###.L"], '["footbreak"]', text="Angle")
+		
+		row = col.row()
+
+		row.prop(context.active_object.pose.bones["###bone###.R"], '["footbreak_onoff"]', text="Roll break (R)") 
+		if context.active_object.pose.bones["###bone###.R"]["footbreak_onoff"] == True:
+			row.prop(context.active_object.pose.bones["###bone###.R"], '["footbreak"]', text="Angle")
+		
+		
+
+def register():
+	bpy.utils.register_class(FootBreakUI)
+	
+def unregister():
+	bpy.utils.unregister_class(FootBreakUI)
+
+	
+	
+register()
+'''
+
 class DATA_PT_rigify_patch(bpy.types.Panel):
 	bl_label = "Rigify RollBreak Patch"
 	bl_space_type = 'PROPERTIES'
@@ -113,6 +165,7 @@ class PatchRigify(bpy.types.Operator):
 		return {'FINISHED'}
 		
 	def patch_human(self, context):
+		global ui_text
 		# Force to be in edit mode
 		start_mode = bpy.context.mode
 		if bpy.context.mode != "EDIT_ARMATURE":
@@ -262,51 +315,9 @@ class PatchRigify(bpy.types.Operator):
 		bpy.ops.object.mode_set(mode=start_mode)
 
 		# add UI
-		ui_text = '''
-import bpy
-
-rig_id = ###rig_id###
-
-class FootBreakUI(bpy.types.Panel):
-	bl_space_type = 'VIEW_3D'
-	bl_region_type = 'UI'
-	bl_label = "Foot Break"
-	bl_idname = rig_id + "_PT_footbreak_ui"
-
-	@classmethod
-	def poll(self, context):
-		if context.mode != 'POSE':
-			return False
-		try:
-			return (context.active_object.data.get("rig_id") == rig_id)
-		except (AttributeError, KeyError, TypeError):
-			return False
-		
-	def draw(self, context):
-		layout = self.layout
-		col = layout.column()
-		row = col.row()
-		row.prop(context.active_object.pose.bones["foot.ik.L"], '["footbreak_onoff"]', text="Roll break (L)") 
-		if context.active_object.pose.bones["foot.ik.L"]["footbreak_onoff"] == True:
-			row.prop(context.active_object.pose.bones["foot.ik.L"], '["footbreak"]', text="Angle")
-		
-		row = col.row()
-		row.prop(context.active_object.pose.bones["foot.ik.R"], '["footbreak_onoff"]', text="Roll break (R)") 
-		if context.active_object.pose.bones["foot.ik.R"]["footbreak_onoff"] == True:
-			row.prop(context.active_object.pose.bones["foot.ik.R"], '["footbreak"]', text="Angle")
-		
-		
-def register():
-	bpy.utils.register_class(FootBreakUI)
-	
-def unregister():
-	bpy.utils.unregister_class(FootBreakUI)
-	
-	
-register()
-'''
 
 		ui_text = ui_text.replace("###rig_id###", "\"" + obj.data["rig_id"] + "\"")
+		ui_text = ui_text.replace("###bone###", "foot.ik")
 
 		text = bpy.data.texts.new(name="rollbreakUI.py")
 		text.use_module = True
