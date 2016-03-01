@@ -88,16 +88,16 @@ class FootBreakUI(bpy.types.Panel):
 		layout = self.layout
 		col = layout.column()
 		row = col.row()
-		row.prop(context.active_object.pose.bones["###bone###.L"], '["footbreak_onoff"]', text="Roll break (L)") 
+		row.prop(context.active_object.pose.bones["###bone###.L"], "footbreak", text="Roll break (L)") 
 
-		if context.active_object.pose.bones["###bone###.L"]["footbreak_onoff"] == True:
-			row.prop(context.active_object.pose.bones["###bone###.L"], '["footbreak"]', text="Angle")
+		if context.active_object.pose.bones["###bone###.L"].footbreak == True:
+			row.prop(context.active_object.pose.bones["###bone###.L"], '["footbreak_angle"]', text="Angle")
 		
 		row = col.row()
 
-		row.prop(context.active_object.pose.bones["###bone###.R"], '["footbreak_onoff"]', text="Roll break (R)") 
-		if context.active_object.pose.bones["###bone###.R"]["footbreak_onoff"] == True:
-			row.prop(context.active_object.pose.bones["###bone###.R"], '["footbreak"]', text="Angle")
+		row.prop(context.active_object.pose.bones["###bone###.R"], "footbreak", text="Roll break (R)") 
+		if context.active_object.pose.bones["###bone###.R"].footbreak == True:
+			row.prop(context.active_object.pose.bones["###bone###.R"], '["footbreak_angle"]', text="Angle")
 		
 		
 
@@ -199,10 +199,9 @@ class PatchRigify(bpy.types.Operator):
 
 			#create custom properties
 			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"] = {}
-			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"]['footbreak'] = {"min":0.0, "max":180.0}
-			bpy.context.active_object.pose.bones[foot_name+side]["footbreak"] = 50.0
-			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"]['footbreak_onoff'] = {"min":0, "max":1}
-			bpy.context.active_object.pose.bones[foot_name+side]["footbreak_onoff"] = True
+			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"]['footbreak_angle'] = {"min":0.0, "max":180.0}
+			bpy.context.active_object.pose.bones[foot_name+side]["footbreak_angle"] = 50.0
+			bpy.context.active_object.pose.bones[foot_name+side].footbreak = True
 
 			#add constraint to top
 			bpy.ops.object.mode_set(mode='POSE')
@@ -259,7 +258,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
 			
 			fcurve = obj.pose.bones[new_roll_name].constraints[1].driver_add('influence')
 			drv = fcurve.driver
@@ -270,7 +269,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_onoff\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footbreak"
 			
 				
 			fcurve = obj.pose.bones[top].constraints[0].driver_add('from_min_x_rot')
@@ -282,7 +281,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
 
 			fcurve = obj.pose.bones[top].constraints[0].driver_add('to_max_x_rot')
 			drv = fcurve.driver
@@ -293,7 +292,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
 
 			fcurve = obj.pose.bones[top].constraints[0].driver_add('influence')
 			drv = fcurve.driver
@@ -304,7 +303,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_onoff\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footbreak"
 			
 
 			bpy.ops.object.mode_set(mode='EDIT')
@@ -367,10 +366,9 @@ class PatchRigify(bpy.types.Operator):
 			
 
 			#create custom properties
-			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"]['footbreak'] = {"min":0.0, "max":180.0}
-			bpy.context.active_object.pose.bones[foot_name+side]["footbreak"] = 50.0
-			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"]['footbreak_onoff'] = {"min":0, "max":1}
-			bpy.context.active_object.pose.bones[foot_name+side]["footbreak_onoff"] = True
+			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"]['footbreak_angle'] = {"min":0.0, "max":180.0}
+			bpy.context.active_object.pose.bones[foot_name+side]["footbreak_angle"] = 50.0
+			bpy.context.active_object.pose.bones[foot_name+side].footbreak = True
 
 			#add constraint to top
 			bpy.ops.object.mode_set(mode='POSE')
@@ -425,13 +423,13 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
 			var = drv.variables.new()
 			var.name = 'var_onoff'
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_onoff\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footbreak"
 			
 			
 				
@@ -444,7 +442,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
 
 			fcurve = obj.pose.bones[top].constraints[0].driver_add('to_max_x_rot')
 			drv = fcurve.driver
@@ -455,7 +453,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
 
 			fcurve = obj.pose.bones[top].constraints[0].driver_add('influence')
 			drv = fcurve.driver
@@ -466,7 +464,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_onoff\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footbreak"
 
 
 					
@@ -484,12 +482,14 @@ class PatchRigify(bpy.types.Operator):
 		exec(text.as_string(), {})
 		return {'FINISHED'}
 		
-		
+	
 def register():
+	bpy.types.PoseBone.footbreak = bpy.props.BoolProperty()
 	bpy.utils.register_class(PatchRigify)
 	bpy.utils.register_class(DATA_PT_rigify_patch)
 	
 def unregister():
+	del bpy.types.PoseBone.footbreak
 	bpy.utils.unregister_class(PatchRigify)
 	bpy.utils.unregister_class(DATA_PT_rigify_patch)
 		
