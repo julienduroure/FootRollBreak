@@ -221,7 +221,7 @@ class PatchRigify(bpy.types.Operator):
 			limit.use_limit_x = True
 			limit.use_limit_y = True
 			limit.use_limit_z = True
-			limit.max_x 	  = math.pi / 2
+			limit.max_x 	  = math.pi
 			limit.owner_space = 'LOCAL'
 			
 			#create constraint on new roll bone
