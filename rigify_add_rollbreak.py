@@ -310,13 +310,14 @@ class PatchRigify(bpy.types.Operator):
 		bpy.ops.object.mode_set(mode=start_mode)
 
 		# add UI
-		ui_text = ui_text.replace("###rig_id###", "\"" + obj.data["rig_id"] + "\"")
-		ui_text = ui_text.replace("###bone###", foot_name)
+		ui_text_ = ui_text.replace("###rig_id###", "\"" + obj.data["rig_id"] + "\"")
+		ui_text_ = ui_text_.replace("###bone###", foot_name)
 
-
+		if "rollbreakUI.py" in bpy.data.texts.keys():
+			bpy.data.texts.remove(bpy.data.texts["rollbreakUI.py"])
 		text = bpy.data.texts.new(name="rollbreakUI.py")
 		text.use_module = True
-		text.write(ui_text)
+		text.write(ui_text_)
 		exec(text.as_string(), {})
 		return {'FINISHED'}
 		
@@ -472,12 +473,14 @@ class PatchRigify(bpy.types.Operator):
 		bpy.ops.object.mode_set(mode=start_mode)
 
 		# add UI
-		ui_text = ui_text.replace("###rig_id###", "\"" + obj.data["rig_id"] + "\"")
-		ui_text = ui_text.replace("###bone###", foot_name)
+		ui_text_ = ui_text.replace("###rig_id###", "\"" + obj.data["rig_id"] + "\"")
+		ui_text_ = ui_text_.replace("###bone###", foot_name)
 
+		if "rollbreakUI.py" in bpy.data.texts.keys():
+			bpy.data.texts.remove(bpy.data.texts["rollbreakUI.py"])
 		text = bpy.data.texts.new(name="rollbreakUI.py")
 		text.use_module = True
-		text.write(ui_text)
+		text.write(ui_text_)
 		exec(text.as_string(), {})
 		return {'FINISHED'}
 		
