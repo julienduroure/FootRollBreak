@@ -488,7 +488,7 @@ def register():
 	bpy.utils.register_class(DATA_PT_rigify_patch)
 	
 def unregister():
-	del bpy.types.PoseBone.footbreakx
+	del bpy.types.PoseBone.footbreak
 	bpy.utils.unregister_class(PatchRigify)
 	bpy.utils.unregister_class(DATA_PT_rigify_patch)
 		
