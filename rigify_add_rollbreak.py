@@ -8,7 +8,6 @@ bl_info = {
 }
 
 #TODO add custom shape for pitchipoy toe top
-#TODO replace slider by checkbox
 #TODO RollBreak, rollbreak, rollBreak, Roll Break, etc... : choose how to write it, and change label, class names, etc...
 
 import bpy
@@ -201,7 +200,7 @@ class PatchRigify(bpy.types.Operator):
 			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"] = {}
 			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"]['footbreak_angle'] = {"min":0.0, "max":180.0}
 			bpy.context.active_object.pose.bones[foot_name+side]["footbreak_angle"] = 50.0
-			bpy.context.active_object.pose.bones[foot_name+side].footbreak = True
+			bpy.context.active_object.pose.bones[foot_name+side].footbreak = False
 
 			#add constraint to top
 			bpy.ops.object.mode_set(mode='POSE')
@@ -368,7 +367,7 @@ class PatchRigify(bpy.types.Operator):
 			#create custom properties
 			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"]['footbreak_angle'] = {"min":0.0, "max":180.0}
 			bpy.context.active_object.pose.bones[foot_name+side]["footbreak_angle"] = 50.0
-			bpy.context.active_object.pose.bones[foot_name+side].footbreak = True
+			bpy.context.active_object.pose.bones[foot_name+side].footbreak = False
 
 			#add constraint to top
 			bpy.ops.object.mode_set(mode='POSE')
@@ -489,7 +488,7 @@ def register():
 	bpy.utils.register_class(DATA_PT_rigify_patch)
 	
 def unregister():
-	del bpy.types.PoseBone.footbreak
+	del bpy.types.PoseBone.footbreakx
 	bpy.utils.unregister_class(PatchRigify)
 	bpy.utils.unregister_class(DATA_PT_rigify_patch)
 		
