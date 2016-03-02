@@ -7,7 +7,6 @@ bl_info = {
 	"category": "Rigging",   
 }
 
-#TODO add custom shape for pitchipoy toe top
 #TODO when a same scene has multiple rigify rigs --> Have 1 texts / Rig
 #TODO RollBreak, rollbreak, rollBreak, Roll Break, etc... : choose how to write it, and change label, class names, etc...
 
@@ -171,6 +170,7 @@ class PatchRigify(bpy.types.Operator):
 		constraint_04_01 = "MCH-heel.02_rock"
 		constraint_04_02 = ".001"
 		constraint_add_name = "MCH-thigh_ik_target"
+		shoulder_wgt        = "shoulder.L"
 
 		for side in [".L", ".R"]:
 			# Top toe bone
@@ -179,6 +179,7 @@ class PatchRigify(bpy.types.Operator):
 							  Vector((obj.data.edit_bones[toe_name+side].tail[0],obj.data.edit_bones[toe_name+side].tail[1],obj.data.edit_bones[roll_name+side].tail[2])),
 							  0)
 			copy_layer(obj, roll_name + side, top)
+			copy_custom_shape(obj, shoulder_wgt, top)
 		
 			
 			# new intermediate roll bone
