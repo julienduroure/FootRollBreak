@@ -7,9 +7,6 @@ bl_info = {
 	"category": "Rigging",   
 }
 
-#TODO when a same scene has multiple rigify rigs --> Have 1 texts / Rig
-#TODO RollBreak, rollbreak, rollBreak, Roll Break, etc... : choose how to write it, and change label, class names, etc...
-
 import bpy
 from mathutils import Vector
 import math
