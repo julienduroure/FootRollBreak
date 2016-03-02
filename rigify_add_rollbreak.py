@@ -177,6 +177,7 @@ class PatchRigify(bpy.types.Operator):
 							  0)
 			copy_layer(obj, roll_name + side, top)
 			copy_custom_shape(obj, shoulder_wgt, top)
+			obj.data.edit_bones[top].use_deform = False
 		
 			
 			# new intermediate roll bone
@@ -347,6 +348,7 @@ class PatchRigify(bpy.types.Operator):
 							  0)
 			copy_layer(obj, roll_name + side, top)
 			copy_custom_shape(obj, roll_name + side, top)
+			obj.data.edit_bones[top].use_deform = False
 			
 			
 			# new intermediate roll bone
