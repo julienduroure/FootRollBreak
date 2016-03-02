@@ -1,4 +1,3 @@
-#TODO_BUG when a same scene has multiple rigify rigs --> Have 1 texts / Rig
-
 #TODO_BETTER RollBreak, rollbreak, rollBreak, Roll Break, etc... : choose how to write it, and change label, class names, etc...
+
 #TODO_BETTER custom shape for pitchipoy toe top
