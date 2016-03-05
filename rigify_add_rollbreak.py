@@ -489,6 +489,17 @@ class PatchRigify(bpy.types.Operator):
 				targ = var.targets[0]
 				targ.id = obj
 				targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footrollbreak_angle\"]"
+
+				fcurve = obj.pose.bones[new_roll_name].constraints[1].driver_add('influence')
+				drv = fcurve.driver
+				drv.type = 'SCRIPTED'
+				drv.expression = "var"
+				var = drv.variables.new()
+				var.name = 'var'
+				var.type = 'SINGLE_PROP'
+				targ = var.targets[0]
+				targ.id = obj
+				targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footrollbreak"
 			
 			
 				
