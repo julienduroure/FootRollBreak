@@ -13,7 +13,7 @@ import math
 
 available = ['Human','Pitchipoy']
 
-complexity_items = [
+human_complexity_items = [
         ("DRIVER", "Driver", "", 1),
         ("CONSTRAINT", "Constraint", "", 2),
         ]
@@ -128,8 +128,8 @@ class DATA_PT_rigify_patch(bpy.types.Panel):
 	def draw(self, context):
 		if not is_already_patched(context.active_object):
 			if check_rigify_type(context.active_object) == "Human":
-                        	self.layout.prop(context.scene, "complexity")
-			op = self.layout.operator("pose.patch_rigify", text="Patch RollBreak").complexity = bpy.context.scene.complexity
+                        	self.layout.prop(context.scene, "human_complexity")
+			op = self.layout.operator("pose.patch_rigify", text="Patch RollBreak").human_complexity = bpy.context.scene.human_complexity
 			self.layout.label("detected type : ", icon="INFO")
 			self.layout.label(check_rigify_type(context.active_object))
 		else:
@@ -142,7 +142,7 @@ class PatchRigify(bpy.types.Operator):
 	bl_label  = "Patch Rigify to add Roll Break"
 	bl_options = {'REGISTER'}	
 
-	complexity = bpy.props.EnumProperty(items=complexity_items,default="DRIVER")
+	human_complexity = bpy.props.EnumProperty(items=human_complexity_items,default="DRIVER")
 	
 	@classmethod
 	def poll(cls, context):
@@ -407,19 +407,19 @@ class PatchRigify(bpy.types.Operator):
 			copy_rot = obj.pose.bones[new_roll_name].constraints.new(type='COPY_ROTATION')
 			copy_rot.target = obj
 			copy_rot.subtarget = roll_name + side
-			if self.complexity == "DRIVER":
+			if self.human_complexity == "DRIVER":
 				copy_rot.use_x = False
 			copy_rot.target_space = 'LOCAL'
 			copy_rot.owner_space = 'LOCAL'
 			
-			if self.complexity == "DRIVER":
+			if self.human_complexity == "DRIVER":
 				#change existing drivers
 				for driv in obj.animation_data.drivers:
 					if driv.data_path == "pose.bones[\"" + driver_01_01 + side + driver_01_02 + "\"].rotation_euler" and driv.array_index == 0:
 						driv.driver.variables[0].targets[0].data_path = "pose.bones[\"" + new_roll_name + "\"].rotation_euler[0]"
 					elif driv.data_path == "pose.bones[\"" + driver_02_01 + side + driver_02_02 + "\"].rotation_euler" and driv.array_index == 0:
 						driv.driver.variables[0].targets[0].data_path = "pose.bones[\"" + new_roll_name + "\"].rotation_euler[0]"
-			elif self.complexity == "CONSTRAINT":
+			elif self.human_complexity == "CONSTRAINT":
 				#delete drivers
 				obj.pose.bones[driver_01_01 + side + driver_01_02].driver_remove("rotation_euler", 0)
 				obj.pose.bones[driver_02_01 + side + driver_02_02].driver_remove("rotation_euler", 0)	
@@ -445,7 +445,7 @@ class PatchRigify(bpy.types.Operator):
 				limit_rot.max_x = math.pi
 				limit_rot.owner_space = 'LOCAL'
 				
-			if self.complexity == "DRIVER":		
+			if self.human_complexity == "DRIVER":		
 				# create new drivers
 				fcurve = obj.pose.bones[new_roll_name].driver_add('rotation_euler' ,0)
 				drv = fcurve.driver
@@ -470,7 +470,7 @@ class PatchRigify(bpy.types.Operator):
 				targ.id = obj
 				targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footbreak"
 
-			elif self.complexity == "CONSTRAINT":
+			elif self.human_complexity == "CONSTRAINT":
 				#add constraint
 				limit_rot = obj.pose.bones[new_roll_name].constraints.new(type="LIMIT_ROTATION")
 				limit_rot.use_limit_x = True
@@ -546,7 +546,7 @@ class PatchRigify(bpy.types.Operator):
 	
 def register():
 	bpy.types.PoseBone.footbreak = bpy.props.BoolProperty()
-	bpy.types.Scene.complexity   = bpy.props.EnumProperty(items=complexity_items)
+	bpy.types.Scene.human_complexity   = bpy.props.EnumProperty(items=human_complexity_items)
 	bpy.utils.register_class(PatchRigify)
 	bpy.utils.register_class(DATA_PT_rigify_patch)
 	
