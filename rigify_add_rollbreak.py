@@ -13,6 +13,11 @@ import math
 
 available = ['Human','Pitchipoy']
 
+complexity_items = [
+        ("SIMPLE", "Simple", "", 1),
+        ("ADVANCED", "Advanced", "", 2),
+        ]
+
 
 def check_rigify_type(obj):
 	human = "MCH-foot.L.roll.01"
@@ -122,7 +127,9 @@ class DATA_PT_rigify_patch(bpy.types.Panel):
 
 	def draw(self, context):
 		if not is_already_patched(context.active_object):
-			self.layout.operator("pose.patch_rigify", text="Patch RollBreak")
+			if check_rigify_type(context.active_object) == "Human":
+                        	self.layout.prop(context.scene, "complexity")
+			op = self.layout.operator("pose.patch_rigify", text="Patch RollBreak").complexity = bpy.context.scene.complexity
 			self.layout.label("detected type : ", icon="INFO")
 			self.layout.label(check_rigify_type(context.active_object))
 		else:
@@ -132,7 +139,10 @@ class DATA_PT_rigify_patch(bpy.types.Panel):
 
 class PatchRigify(bpy.types.Operator):
 	bl_idname = "pose.patch_rigify"
-	bl_label  = "Patch Rigify to add Roll Break"	
+	bl_label  = "Patch Rigify to add Roll Break"
+	bl_options = {'REGISTER'}	
+
+	complexity = bpy.props.EnumProperty(items=complexity_items,default="SIMPLE")
 	
 	@classmethod
 	def poll(cls, context):
@@ -397,40 +407,88 @@ class PatchRigify(bpy.types.Operator):
 			copy_rot = obj.pose.bones[new_roll_name].constraints.new(type='COPY_ROTATION')
 			copy_rot.target = obj
 			copy_rot.subtarget = roll_name + side
-			copy_rot.use_x = False
+			if self.complexity == "SIMPLE":
+				copy_rot.use_x = False
 			copy_rot.target_space = 'LOCAL'
 			copy_rot.owner_space = 'LOCAL'
 			
-			#change existing drivers
-			for driv in obj.animation_data.drivers:
-				if driv.data_path == "pose.bones[\"" + driver_01_01 + side + driver_01_02 + "\"].rotation_euler" and driv.array_index == 0:
-					driv.driver.variables[0].targets[0].data_path = "pose.bones[\"" + new_roll_name + "\"].rotation_euler[0]"
-				elif driv.data_path == "pose.bones[\"" + driver_02_01 + side + driver_02_02 + "\"].rotation_euler" and driv.array_index == 0:
-					driv.driver.variables[0].targets[0].data_path = "pose.bones[\"" + new_roll_name + "\"].rotation_euler[0]"
-					
-			# create new drivers
-			fcurve = obj.pose.bones[new_roll_name].driver_add('rotation_euler' ,0)
-			drv = fcurve.driver
-			drv.type = 'SCRIPTED'
-			drv.expression = "min(var_break*2*pi/360,var) if var_onoff == True else var"
-			var = drv.variables.new()
-			var.name = 'var'
-			var.type = 'SINGLE_PROP'
-			targ = var.targets[0]
-			targ.id = obj
-			targ.data_path = "pose.bones[\"" + roll_name + side + "\"].rotation_euler[0]"
-			var = drv.variables.new()
-			var.name = 'var_break'
-			var.type = 'SINGLE_PROP'
-			targ = var.targets[0]
-			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
-			var = drv.variables.new()
-			var.name = 'var_onoff'
-			var.type = 'SINGLE_PROP'
-			targ = var.targets[0]
-			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footbreak"
+			if self.complexity == "SIMPLE":
+				#change existing drivers
+				for driv in obj.animation_data.drivers:
+					if driv.data_path == "pose.bones[\"" + driver_01_01 + side + driver_01_02 + "\"].rotation_euler" and driv.array_index == 0:
+						driv.driver.variables[0].targets[0].data_path = "pose.bones[\"" + new_roll_name + "\"].rotation_euler[0]"
+					elif driv.data_path == "pose.bones[\"" + driver_02_01 + side + driver_02_02 + "\"].rotation_euler" and driv.array_index == 0:
+						driv.driver.variables[0].targets[0].data_path = "pose.bones[\"" + new_roll_name + "\"].rotation_euler[0]"
+			elif self.complexity == "ADVANCED":
+				#delete drivers
+				obj.pose.bones[driver_01_01 + side + driver_01_02].driver_remove("rotation_euler", 0)
+				obj.pose.bones[driver_02_01 + side + driver_02_02].driver_remove("rotation_euler", 0)	
+
+				#add new constraints
+				copy_rot = obj.pose.bones[driver_01_01 + side + driver_01_02].constraints.new(type='COPY_ROTATION')
+				copy_rot.target = obj
+				copy_rot.subtarget = new_roll_name
+				copy_rot.owner_space = 'LOCAL'
+				copy_rot.target_space = 'LOCAL'
+				limit_rot = obj.pose.bones[driver_01_01 + side + driver_01_02].constraints.new(type='LIMIT_ROTATION')
+				limit_rot.use_limit_x = True
+				limit_rot.min_x = - math.pi
+				limit_rot.owner_space = 'LOCAL'
+
+				copy_rot = obj.pose.bones[driver_02_01 + side + driver_02_02].constraints.new(type='COPY_ROTATION')
+				copy_rot.target = obj
+				copy_rot.subtarget = new_roll_name
+				copy_rot.owner_space = 'LOCAL'
+				copy_rot.target_space = 'LOCAL'
+				limit_rot = obj.pose.bones[driver_02_01 + side + driver_02_02].constraints.new(type='LIMIT_ROTATION')
+				limit_rot.use_limit_x = True
+				limit_rot.max_x = math.pi
+				limit_rot.owner_space = 'LOCAL'
+				
+			if self.complexity == "SIMPLE":		
+				# create new drivers
+				fcurve = obj.pose.bones[new_roll_name].driver_add('rotation_euler' ,0)
+				drv = fcurve.driver
+				drv.type = 'SCRIPTED'
+				drv.expression = "min(var_break*2*pi/360,var) if var_onoff == True else var"
+				var = drv.variables.new()
+				var.name = 'var'
+				var.type = 'SINGLE_PROP'
+				targ = var.targets[0]
+				targ.id = obj
+				targ.data_path = "pose.bones[\"" + roll_name + side + "\"].rotation_euler[0]"
+				var = drv.variables.new()
+				var.name = 'var_break'
+				var.type = 'SINGLE_PROP'
+				targ = var.targets[0]
+				targ.id = obj
+				targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
+				var = drv.variables.new()
+				var.name = 'var_onoff'
+				var.type = 'SINGLE_PROP'
+				targ = var.targets[0]
+				targ.id = obj
+				targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footbreak"
+
+			elif self.complexity == "ADVANCED":
+				#add constraint
+				limit_rot = obj.pose.bones[new_roll_name].constraints.new(type="LIMIT_ROTATION")
+				limit_rot.use_limit_x = True
+				limit_rot.min_x = - math.pi
+				limit_rot.max_x = 0 #will be set be driver
+				limit_rot.owner_space = 'LOCAL'
+
+				#add driver
+				fcurve = obj.pose.bones[new_roll_name].constraints[1].driver_add('max_x')
+				drv = fcurve.driver
+				drv.type = 'SCRIPTED'
+				drv.expression = "var*2*pi/360"
+				var = drv.variables.new()
+				var.name = 'var'
+				var.type = 'SINGLE_PROP'
+				targ = var.targets[0]
+				targ.id = obj
+				targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
 			
 			
 				
@@ -488,6 +546,7 @@ class PatchRigify(bpy.types.Operator):
 	
 def register():
 	bpy.types.PoseBone.footbreak = bpy.props.BoolProperty()
+	bpy.types.Scene.complexity   = bpy.props.EnumProperty(items=complexity_items)
 	bpy.utils.register_class(PatchRigify)
 	bpy.utils.register_class(DATA_PT_rigify_patch)
 	
