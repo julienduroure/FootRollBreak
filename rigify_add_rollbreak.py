@@ -1,9 +1,9 @@
 bl_info = {
-	"name": "Add Roll Break to Rigify",
+	"name": "Add FootRoll Break to Rigify",
 	"author": "Julien Duroure",
 	"version": (0, 0, 1),
 	"blender": (2,77, 0),
-	"description": "Add Roll Break to Rigify",
+	"description": "Add FootRoll Break to Rigify",
 	"category": "Rigging",   
 }
 
@@ -66,12 +66,12 @@ import bpy
 
 rig_id = ###rig_id###
 
-class FootBreakUI(bpy.types.Panel):
+class FootRollBreakUI(bpy.types.Panel):
 
 	bl_space_type = 'VIEW_3D'
 	bl_region_type = 'UI'
-	bl_label = "Foot Break"
-	bl_idname = rig_id + "_PT_footbreak_ui"
+	bl_label = "FootRoll Break"
+	bl_idname = rig_id + "_PT_FootRollBreak_ui"
 
 
 	@classmethod
@@ -89,24 +89,24 @@ class FootBreakUI(bpy.types.Panel):
 		layout = self.layout
 		col = layout.column()
 		row = col.row()
-		row.prop(context.active_object.pose.bones["###bone###.L"], "footbreak", text="Roll break (L)") 
+		row.prop(context.active_object.pose.bones["###bone###.L"], "footrollbreak", text="FootRoll Break (L)") 
 
-		if context.active_object.pose.bones["###bone###.L"].footbreak == True:
-			row.prop(context.active_object.pose.bones["###bone###.L"], '["footbreak_angle"]', text="Angle")
+		if context.active_object.pose.bones["###bone###.L"].footrollbreak == True:
+			row.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_angle"]', text="Angle")
 		
 		row = col.row()
 
-		row.prop(context.active_object.pose.bones["###bone###.R"], "footbreak", text="Roll break (R)") 
-		if context.active_object.pose.bones["###bone###.R"].footbreak == True:
-			row.prop(context.active_object.pose.bones["###bone###.R"], '["footbreak_angle"]', text="Angle")
+		row.prop(context.active_object.pose.bones["###bone###.R"], "footrollbreak", text="FootRoll Break (R)") 
+		if context.active_object.pose.bones["###bone###.R"].footrollbreak == True:
+			row.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_angle"]', text="Angle")
 		
 		
 
 def register():
-	bpy.utils.register_class(FootBreakUI)
+	bpy.utils.register_class(FootRollBreakUI)
 	
 def unregister():
-	bpy.utils.unregister_class(FootBreakUI)
+	bpy.utils.unregister_class(FootRollBreakUI)
 
 	
 	
@@ -114,7 +114,7 @@ register()
 '''
 
 class DATA_PT_rigify_patch(bpy.types.Panel):
-	bl_label = "Rigify RollBreak Patch"
+	bl_label = "Rigify FootRoll Break Patch"
 	bl_space_type = 'PROPERTIES'
 	bl_region_type = 'WINDOW'
 	bl_context = "data"
@@ -129,7 +129,7 @@ class DATA_PT_rigify_patch(bpy.types.Panel):
 		if not is_already_patched(context.active_object):
 			if check_rigify_type(context.active_object) == "Human":
                         	self.layout.prop(context.scene, "human_complexity")
-			op = self.layout.operator("pose.patch_rigify", text="Patch RollBreak").human_complexity = bpy.context.scene.human_complexity
+			op = self.layout.operator("pose.patch_rigify", text="Patch FootRoll Break").human_complexity = bpy.context.scene.human_complexity
 			self.layout.label("detected type : ", icon="INFO")
 			self.layout.label(check_rigify_type(context.active_object))
 		else:
@@ -139,7 +139,7 @@ class DATA_PT_rigify_patch(bpy.types.Panel):
 
 class PatchRigify(bpy.types.Operator):
 	bl_idname = "pose.patch_rigify"
-	bl_label  = "Patch Rigify to add Roll Break"
+	bl_label  = "Patch Rigify to add FootRoll Break"
 	bl_options = {'REGISTER'}	
 
 	human_complexity = bpy.props.EnumProperty(items=human_complexity_items,default="DRIVER")
@@ -208,9 +208,9 @@ class PatchRigify(bpy.types.Operator):
 
 			#create custom properties
 			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"] = {}
-			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"]['footbreak_angle'] = {"min":0.0, "max":180.0}
-			bpy.context.active_object.pose.bones[foot_name+side]["footbreak_angle"] = 50.0
-			bpy.context.active_object.pose.bones[foot_name+side].footbreak = False
+			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"]['footrollbreak_angle'] = {"min":0.0, "max":180.0}
+			bpy.context.active_object.pose.bones[foot_name+side]["footrollbreak_angle"] = 50.0
+			bpy.context.active_object.pose.bones[foot_name+side].footrollbreak = False
 
 			#add constraint to top
 			bpy.ops.object.mode_set(mode='POSE')
@@ -267,7 +267,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footrollbreak_angle\"]"
 			
 			fcurve = obj.pose.bones[new_roll_name].constraints[1].driver_add('influence')
 			drv = fcurve.driver
@@ -278,7 +278,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footbreak"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footrollbreak"
 			
 				
 			fcurve = obj.pose.bones[top].constraints[0].driver_add('from_min_x_rot')
@@ -290,7 +290,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footrollbreak_angle\"]"
 
 			fcurve = obj.pose.bones[top].constraints[0].driver_add('to_max_x_rot')
 			drv = fcurve.driver
@@ -301,7 +301,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footrollbreak_angle\"]"
 
 			fcurve = obj.pose.bones[top].constraints[0].driver_add('influence')
 			drv = fcurve.driver
@@ -312,7 +312,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footbreak"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footrollbreak"
 			
 
 			bpy.ops.object.mode_set(mode='EDIT')
@@ -323,9 +323,9 @@ class PatchRigify(bpy.types.Operator):
 		ui_text_ = ui_text.replace("###rig_id###", "\"" + obj.data["rig_id"] + "\"")
 		ui_text_ = ui_text_.replace("###bone###", foot_name)
 
-		if obj.data["rig_id"] + "_rollbreakUI.py" in bpy.data.texts.keys():
-			bpy.data.texts.remove(bpy.data.texts[obj.data["rig_id"] + "_rollbreakUI.py"])
-		text = bpy.data.texts.new(name=obj.data["rig_id"] + "_rollbreakUI.py")
+		if obj.data["rig_id"] + "_footrollbreakUI.py" in bpy.data.texts.keys():
+			bpy.data.texts.remove(bpy.data.texts[obj.data["rig_id"] + "_footrollbreakUI.py"])
+		text = bpy.data.texts.new(name=obj.data["rig_id"] + "_footrollbreakUI.py")
 		text.use_module = True
 		text.write(ui_text_)
 		exec(text.as_string(), {})
@@ -377,9 +377,9 @@ class PatchRigify(bpy.types.Operator):
 			
 
 			#create custom properties
-			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"]['footbreak_angle'] = {"min":0.0, "max":180.0}
-			bpy.context.active_object.pose.bones[foot_name+side]["footbreak_angle"] = 50.0
-			bpy.context.active_object.pose.bones[foot_name+side].footbreak = False
+			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"]['footrollbreak_angle'] = {"min":0.0, "max":180.0}
+			bpy.context.active_object.pose.bones[foot_name+side]["footrollbreak_angle"] = 50.0
+			bpy.context.active_object.pose.bones[foot_name+side].footrollbreak = False
 
 			#add constraint to top
 			bpy.ops.object.mode_set(mode='POSE')
@@ -462,13 +462,13 @@ class PatchRigify(bpy.types.Operator):
 				var.type = 'SINGLE_PROP'
 				targ = var.targets[0]
 				targ.id = obj
-				targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
+				targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footrollbreak_angle\"]"
 				var = drv.variables.new()
 				var.name = 'var_onoff'
 				var.type = 'SINGLE_PROP'
 				targ = var.targets[0]
 				targ.id = obj
-				targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footbreak"
+				targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footrollbreak"
 
 			elif self.human_complexity == "CONSTRAINT":
 				#add constraint
@@ -488,7 +488,7 @@ class PatchRigify(bpy.types.Operator):
 				var.type = 'SINGLE_PROP'
 				targ = var.targets[0]
 				targ.id = obj
-				targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
+				targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footrollbreak_angle\"]"
 			
 			
 				
@@ -501,7 +501,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footrollbreak_angle\"]"
 
 			fcurve = obj.pose.bones[top].constraints[0].driver_add('to_max_x_rot')
 			drv = fcurve.driver
@@ -512,7 +512,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footbreak_angle\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footrollbreak_angle\"]"
 
 			fcurve = obj.pose.bones[top].constraints[0].driver_add('influence')
 			drv = fcurve.driver
@@ -523,7 +523,7 @@ class PatchRigify(bpy.types.Operator):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footbreak"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footrollbreak"
 
 
 					
@@ -535,9 +535,9 @@ class PatchRigify(bpy.types.Operator):
 		ui_text_ = ui_text.replace("###rig_id###", "\"" + obj.data["rig_id"] + "\"")
 		ui_text_ = ui_text_.replace("###bone###", foot_name)
 
-		if obj.data["rig_id"] + "_rollbreakUI.py" in bpy.data.texts.keys():
-			bpy.data.texts.remove(bpy.data.texts[obj.data["rig_id"] + "_rollbreakUI.py"])
-		text = bpy.data.texts.new(name=obj.data["rig_id"] + "_rollbreakUI.py")
+		if obj.data["rig_id"] + "_footrollbreakUI.py" in bpy.data.texts.keys():
+			bpy.data.texts.remove(bpy.data.texts[obj.data["rig_id"] + "_footrollbreakUI.py"])
+		text = bpy.data.texts.new(name=obj.data["rig_id"] + "_footrollbreakUI.py")
 		text.use_module = True
 		text.write(ui_text_)
 		exec(text.as_string(), {})
@@ -545,13 +545,13 @@ class PatchRigify(bpy.types.Operator):
 		
 	
 def register():
-	bpy.types.PoseBone.footbreak = bpy.props.BoolProperty()
+	bpy.types.PoseBone.footrollbreak = bpy.props.BoolProperty()
 	bpy.types.Scene.human_complexity   = bpy.props.EnumProperty(items=human_complexity_items)
 	bpy.utils.register_class(PatchRigify)
 	bpy.utils.register_class(DATA_PT_rigify_patch)
 	
 def unregister():
-	del bpy.types.PoseBone.footbreak
+	del bpy.types.PoseBone.footrollbreak
 	bpy.utils.unregister_class(PatchRigify)
 	bpy.utils.unregister_class(DATA_PT_rigify_patch)
 		

@@ -1,3 +1,1 @@
-#TODO_BETTER RollBreak, rollbreak, rollBreak, Roll Break, etc... : choose how to write it, and change label, class names, etc...
-
 #TODO_BETTER custom shape for pitchipoy toe top
