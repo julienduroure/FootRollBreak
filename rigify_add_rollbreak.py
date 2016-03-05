@@ -14,8 +14,8 @@ import math
 available = ['Human','Pitchipoy']
 
 complexity_items = [
-        ("SIMPLE", "Simple", "", 1),
-        ("ADVANCED", "Advanced", "", 2),
+        ("DRIVER", "Driver", "", 1),
+        ("CONSTRAINT", "Constraint", "", 2),
         ]
 
 
@@ -142,7 +142,7 @@ class PatchRigify(bpy.types.Operator):
 	bl_label  = "Patch Rigify to add Roll Break"
 	bl_options = {'REGISTER'}	
 
-	complexity = bpy.props.EnumProperty(items=complexity_items,default="SIMPLE")
+	complexity = bpy.props.EnumProperty(items=complexity_items,default="DRIVER")
 	
 	@classmethod
 	def poll(cls, context):
@@ -407,19 +407,19 @@ class PatchRigify(bpy.types.Operator):
 			copy_rot = obj.pose.bones[new_roll_name].constraints.new(type='COPY_ROTATION')
 			copy_rot.target = obj
 			copy_rot.subtarget = roll_name + side
-			if self.complexity == "SIMPLE":
+			if self.complexity == "DRIVER":
 				copy_rot.use_x = False
 			copy_rot.target_space = 'LOCAL'
 			copy_rot.owner_space = 'LOCAL'
 			
-			if self.complexity == "SIMPLE":
+			if self.complexity == "DRIVER":
 				#change existing drivers
 				for driv in obj.animation_data.drivers:
 					if driv.data_path == "pose.bones[\"" + driver_01_01 + side + driver_01_02 + "\"].rotation_euler" and driv.array_index == 0:
 						driv.driver.variables[0].targets[0].data_path = "pose.bones[\"" + new_roll_name + "\"].rotation_euler[0]"
 					elif driv.data_path == "pose.bones[\"" + driver_02_01 + side + driver_02_02 + "\"].rotation_euler" and driv.array_index == 0:
 						driv.driver.variables[0].targets[0].data_path = "pose.bones[\"" + new_roll_name + "\"].rotation_euler[0]"
-			elif self.complexity == "ADVANCED":
+			elif self.complexity == "CONSTRAINT":
 				#delete drivers
 				obj.pose.bones[driver_01_01 + side + driver_01_02].driver_remove("rotation_euler", 0)
 				obj.pose.bones[driver_02_01 + side + driver_02_02].driver_remove("rotation_euler", 0)	
@@ -445,7 +445,7 @@ class PatchRigify(bpy.types.Operator):
 				limit_rot.max_x = math.pi
 				limit_rot.owner_space = 'LOCAL'
 				
-			if self.complexity == "SIMPLE":		
+			if self.complexity == "DRIVER":		
 				# create new drivers
 				fcurve = obj.pose.bones[new_roll_name].driver_add('rotation_euler' ,0)
 				drv = fcurve.driver
@@ -470,7 +470,7 @@ class PatchRigify(bpy.types.Operator):
 				targ.id = obj
 				targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footbreak"
 
-			elif self.complexity == "ADVANCED":
+			elif self.complexity == "CONSTRAINT":
 				#add constraint
 				limit_rot = obj.pose.bones[new_roll_name].constraints.new(type="LIMIT_ROTATION")
 				limit_rot.use_limit_x = True
