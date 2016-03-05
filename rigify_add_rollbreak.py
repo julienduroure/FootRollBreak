@@ -4,6 +4,9 @@ bl_info = {
 	"version": (0, 0, 1),
 	"blender": (2,77, 0),
 	"description": "Add FootRoll Break to Rigify",
+	"location": "Armature Properties, View 3D Properties",
+	"wiki_url": "http://julienduroure.com/footrollbreak/",
+	"tracker_url": "https://github.com/julienduroure/rigify_rollbreak_patch",
 	"category": "Rigging",   
 }
 
