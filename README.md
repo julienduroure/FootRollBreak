@@ -5,6 +5,10 @@ Totally unstable for now. Please do not use :)
 
 # Version history
 
+## 0.0.2 (2016, March 6th)
+
+* driver/constraint option for Human rig
+
 ## 0.0.1 (2016, March 5th)
 
 * Initial Work
