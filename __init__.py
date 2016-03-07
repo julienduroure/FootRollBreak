@@ -25,7 +25,7 @@ else:
 	from .utils import *
 	from . import ui
 	from .patch_human import *
-	from .patch_pichipoy import *
+	from .patch_pitchipoy import *
 	from . import ops
 
 import bpy
