@@ -32,7 +32,7 @@ import bpy
 
 def register():
 	bpy.types.PoseBone.footrollbreak = bpy.props.BoolProperty()
-	bpy.types.Scene.human_complexity   = bpy.props.EnumProperty(items=human_complexity_items)
+	bpy.types.Scene.human_complexity   = bpy.props.EnumProperty(items=human_complexity_items, default=default_complexity)
 	ops.register()
 	ui.register()
 	

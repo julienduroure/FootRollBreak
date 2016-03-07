@@ -1,5 +1,6 @@
 import bpy
 from .ui_texts import *
+from .globals import *
 from .utils import *
 
 from mathutils import Vector
@@ -26,7 +27,7 @@ def exec_patch_human(complexity):
 			   
 	for side in [".L", ".R"]:
 		# Top toe bone
-		top = new_bone(obj, "toe-top" + side)
+		top = new_bone(obj, name_toe_top + side)
 		def_geo(obj, top, obj.data.edit_bones[toe_name+side].tail,
 						  Vector((obj.data.edit_bones[toe_name+side].tail[0],obj.data.edit_bones[toe_name+side].tail[1],obj.data.edit_bones[foot_name+side].tail[2])),
 						  0)
@@ -36,7 +37,7 @@ def exec_patch_human(complexity):
 		
 		
 		# new intermediate roll bone
-		new_roll_name = new_bone(obj, "ORG-foot_roll.ik"+side)
+		new_roll_name = new_bone(obj, name_intermediate_roll +side)
 		def_geo(obj, new_roll_name, obj.data.edit_bones[roll_name+side].head, obj.data.edit_bones[roll_name+side].tail, obj.data.edit_bones[roll_name+side].roll)
 		copy_layer(obj, internal_roll_01 + side + internal_roll_02, new_roll_name)
 		copy_rotation_mode(obj, roll_name + side, new_roll_name)
@@ -51,9 +52,9 @@ def exec_patch_human(complexity):
 			
 
 		#create custom properties
-		bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"]['footrollbreak_angle'] = {"min":0.0, "max":180.0}
-		bpy.context.active_object.pose.bones[foot_name+side]["footrollbreak_angle"] = 50.0
-		bpy.context.active_object.pose.bones[foot_name+side].footrollbreak = False
+		bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"][name_footrollbreak_angle] = {"min":0.0, "max":180.0}
+		bpy.context.active_object.pose.bones[foot_name+side][name_footrollbreak_angle] = default_footrollbreak_angle
+		bpy.context.active_object.pose.bones[foot_name+side].footrollbreak = default_footrollbreak
 
 		#add constraint to top
 		bpy.ops.object.mode_set(mode='POSE')
@@ -136,7 +137,7 @@ def exec_patch_human(complexity):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footrollbreak_angle\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_footrollbreak_angle + "\"]"
 			var = drv.variables.new()
 			var.name = 'var_onoff'
 			var.type = 'SINGLE_PROP'
@@ -162,7 +163,7 @@ def exec_patch_human(complexity):
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footrollbreak_angle\"]"
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_footrollbreak_angle + "\"]"
 
 			fcurve = obj.pose.bones[new_roll_name].constraints[1].driver_add('influence')
 			drv = fcurve.driver
@@ -184,7 +185,7 @@ def exec_patch_human(complexity):
 		var.type = 'SINGLE_PROP'
 		targ = var.targets[0]
 		targ.id = obj
-		targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footrollbreak_angle\"]"
+		targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_footrollbreak_angle + "\"]"
 
 		fcurve = obj.pose.bones[top].constraints[0].driver_add('to_max_x_rot')
 		drv = fcurve.driver
@@ -195,7 +196,7 @@ def exec_patch_human(complexity):
 		var.type = 'SINGLE_PROP'
 		targ = var.targets[0]
 		targ.id = obj
-		targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"footrollbreak_angle\"]"
+		targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_footrollbreak_angle + "\"]"
 
 		fcurve = obj.pose.bones[top].constraints[0].driver_add('influence')
 		drv = fcurve.driver

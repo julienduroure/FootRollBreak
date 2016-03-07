@@ -19,3 +19,12 @@ def check_rigify_type(obj):
 def is_already_patched(obj):
 	bone = "ORG-foot_roll.ik.L"
 	return bone in obj.data.bones
+
+name_intermediate_roll = "ORG-foot_roll.ik"
+name_toe_top           = "toe-top"
+
+name_footrollbreak_angle = 	"footrollbreak_angle"
+
+default_footrollbreak_angle = 50.0
+default_footrollbreak       = False
+default_complexity = "DRIVER"
