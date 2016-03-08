@@ -16,7 +16,7 @@ class DATA_PT_rigify_patch(bpy.types.Panel):
 
 	def draw(self, context):
 		if not is_already_patched(context.active_object):
-			op = self.layout.operator("pose.patch_rigify", text="Patch FootRoll Break").human_complexity = addonpref().human_complexity
+			op = self.layout.operator("pose.patch_rigify", text="Patch FootRoll Break")
 			if addonpref().debug == True:
 				row = self.layout.row()
 				row.label("detected type : ")
@@ -26,6 +26,9 @@ class DATA_PT_rigify_patch(bpy.types.Panel):
 				if check_rigify_type(context.active_object) == "Human":
 					row.label("complexity mode : ")
 					row.label(addonpref().human_complexity)
+				elif check_rigify_type(context.active_object) == "Pitchipoy":
+					row.label("complexity mode : ")
+					row.label(addonpref().pitchipoy_complexity)					
 		else:
 			self.layout.label("already patched!", icon="INFO")
 			

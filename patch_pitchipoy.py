@@ -6,7 +6,7 @@ from .utils import *
 from mathutils import Vector
 import math
 
-def exec_patch_pitchipoy():
+def exec_patch_pitchipoy(complexity):
 
 	# Force to be in edit mode
 	start_mode = bpy.context.mode

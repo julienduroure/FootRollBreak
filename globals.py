@@ -7,6 +7,10 @@ human_complexity_items = [
 		("CONSTRAINT", "Constraint", "", 2),
 		]
 		
+pitchipoy_complexity_items = [
+		("CONSTRAINT", "Constraint", "", 1),
+		]
+		
 		
 def check_rigify_type(obj):
 	human = "MCH-foot.L.roll.01"
@@ -29,7 +33,8 @@ name_footrollbreak_angle = 	"footrollbreak_angle"
 
 default_footrollbreak_angle = 50.0
 default_footrollbreak       = False
-default_complexity = "DRIVER"
+default_human_complexity = "DRIVER"
+default_pitchipoy_complexity = "CONSTRAINT"
 
 def addonpref():
 	user_preferences = bpy.context.user_preferences

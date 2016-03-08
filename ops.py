@@ -9,8 +9,6 @@ class PatchRigify(bpy.types.Operator):
 	bl_label  = "Patch Rigify to add FootRoll Break"
 	bl_options = {'REGISTER'}	
 
-	human_complexity = bpy.props.EnumProperty(items=human_complexity_items,default="DRIVER")
-	
 	@classmethod
 	def poll(cls, context):
 		return context.active_object.type == 'ARMATURE' 	
@@ -19,9 +17,9 @@ class PatchRigify(bpy.types.Operator):
 		obj = context.active_object
 		rigify_type = check_rigify_type(obj)
 		if rigify_type == 'Human':
-			return exec_patch_human(self.human_complexity)
+			return exec_patch_human(addonpref().human_complexity)
 		elif rigify_type == 'Pitchipoy':
-			return exec_patch_pitchipoy()
+			return exec_patch_pitchipoy(addonpref().pitchipoy_complexity)
 		else: 
 			pass #TODO message unknown
 
