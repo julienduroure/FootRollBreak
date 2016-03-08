@@ -1,3 +1,5 @@
+import bpy
+
 available = ['Human','Pitchipoy']
 
 human_complexity_items = [
@@ -28,3 +30,7 @@ name_footrollbreak_angle = 	"footrollbreak_angle"
 default_footrollbreak_angle = 50.0
 default_footrollbreak       = False
 default_complexity = "DRIVER"
+
+def addonpref():
+	user_preferences = bpy.context.user_preferences
+	return user_preferences.addons[__package__].preferences

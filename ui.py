@@ -19,8 +19,9 @@ class DATA_PT_rigify_patch(bpy.types.Panel):
 			if check_rigify_type(context.active_object) == "Human":
                         	self.layout.prop(context.scene, "human_complexity")
 			op = self.layout.operator("pose.patch_rigify", text="Patch FootRoll Break").human_complexity = bpy.context.scene.human_complexity
-			self.layout.label("detected type : ", icon="INFO")
-			self.layout.label(check_rigify_type(context.active_object))
+			if addonpref().debug == True:
+				self.layout.label("detected type : ", icon="INFO")
+				self.layout.label(check_rigify_type(context.active_object))
 		else:
 			self.layout.label("already patched!", icon="INFO")
 			

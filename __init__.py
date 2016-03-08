@@ -12,6 +12,7 @@ bl_info = {
 
 if "bpy" in locals():
 	import imp
+	imp.reload(addon_prefs)
 	imp.reload(ui_texts)
 	imp.reload(globals)
 	imp.reload(utils)
@@ -20,6 +21,7 @@ if "bpy" in locals():
 	imp.reload(patch_pitchipoy)
 	imp.reload(ops)
 else:
+	from .addon_prefs import *
 	from .ui_texts import *
 	from .globals import *
 	from .utils import *
@@ -33,11 +35,14 @@ import bpy
 def register():
 	bpy.types.PoseBone.footrollbreak = bpy.props.BoolProperty()
 	bpy.types.Scene.human_complexity   = bpy.props.EnumProperty(items=human_complexity_items, default=default_complexity)
+	addon_prefs.register()
 	ops.register()
 	ui.register()
 	
 def unregister():
 	del bpy.types.PoseBone.footrollbreak
+	del bpy.types.Scene.human_complexity
+	addon_prefs.unregister()
 	ops.unregister()
 	ui.unregister()
 		
