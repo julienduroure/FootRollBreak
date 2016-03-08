@@ -18,8 +18,14 @@ class DATA_PT_rigify_patch(bpy.types.Panel):
 		if not is_already_patched(context.active_object):
 			op = self.layout.operator("pose.patch_rigify", text="Patch FootRoll Break").human_complexity = addonpref().human_complexity
 			if addonpref().debug == True:
-				self.layout.label("detected type : ", icon="INFO")
-				self.layout.label(check_rigify_type(context.active_object))
+				row = self.layout.row()
+				row.label("detected type : ")
+				row.label(check_rigify_type(context.active_object))
+				
+				row = self.layout.row()
+				if check_rigify_type(context.active_object) == "Human":
+					row.label("complexity mode : ")
+					row.label(addonpref().human_complexity)
 		else:
 			self.layout.label("already patched!", icon="INFO")
 			
