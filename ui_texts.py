@@ -29,17 +29,23 @@ class FootRollBreakUI(bpy.types.Panel):
 		row.prop(context.active_object.pose.bones["###bone###.L"], "footrollbreak", text="FootRoll Break (L)") 
 
 		if context.active_object.pose.bones["###bone###.L"].footrollbreak == True:
-			row = col.row()
-			row.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_angle"]', text="Angle")
-			row.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_angle_max"]', text="Angle Max")
+			if context.active_object.pose.bones["###bone_roll###.L"]["complexity"] == "FULL":
+				row = col.row()
+				row.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_angle"]', text="Angle")
+				row.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_angle_max"]', text="Angle Max")
+			else:
+				row.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_angle"]', text="Angle")
 		
 		row = col.row()
 
 		row.prop(context.active_object.pose.bones["###bone###.R"], "footrollbreak", text="FootRoll Break (R)") 
 		if context.active_object.pose.bones["###bone###.R"].footrollbreak == True:
-			row = col.row()
-			row.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_angle"]', text="Angle")
-			row.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_angle_max"]', text="Angle Max")
+			if context.active_object.pose.bones["###bone_roll###.R"]["complexity"] == "FULL":
+				row = col.row()
+				row.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_angle"]', text="Angle")
+				row.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_angle_max"]', text="Angle Max")
+			else:
+				row.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_angle"]', text="Angle")
 		
 		
 

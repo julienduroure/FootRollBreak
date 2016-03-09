@@ -56,6 +56,7 @@ def exec_patch_pitchipoy(complexity):
 		obj.data.edit_bones[constraint_04_01 + side + constraint_04_02].parent = obj.data.edit_bones[top]
 
 		#create custom properties
+		bpy.context.active_object.pose.bones[new_roll_name]["complexity"] = complexity
 		bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"] = {}
 		bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"]['footrollbreak_angle'] = {"min":0.0, "max":180.0}
 		bpy.context.active_object.pose.bones[foot_name+side]["footrollbreak_angle"] = default_footrollbreak_angle
@@ -170,6 +171,7 @@ def exec_patch_pitchipoy(complexity):
 	# add UI
 	ui_text_ = ui_text.replace("###rig_id###", "\"" + obj.data["rig_id"] + "\"")
 	ui_text_ = ui_text_.replace("###bone###", foot_name)
+	ui_text_ = ui_text_.replace("###bone_roll###", name_intermediate_roll)
 
 	if obj.data["rig_id"] + "_footrollbreakUI.py" in bpy.data.texts.keys():
 		bpy.data.texts.remove(bpy.data.texts[obj.data["rig_id"] + "_footrollbreakUI.py"])

@@ -81,6 +81,7 @@ def exec_patch_human(complexity):
 			
 
 		#create custom properties
+		bpy.context.active_object.pose.bones[new_roll_name]["complexity"] = complexity
 		bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"][name_footrollbreak_angle] = {"min":0.0, "max":180.0}
 		bpy.context.active_object.pose.bones[foot_name+side][name_footrollbreak_angle] = default_footrollbreak_angle
 		bpy.context.active_object.pose.bones[foot_name+side].footrollbreak = default_footrollbreak
@@ -332,6 +333,7 @@ def exec_patch_human(complexity):
 	# add UI
 	ui_text_ = ui_text.replace("###rig_id###", "\"" + obj.data["rig_id"] + "\"")
 	ui_text_ = ui_text_.replace("###bone###", foot_name)
+	ui_text_ = ui_text_.replace("###bone_roll###", name_intermediate_roll)
 	if obj.data["rig_id"] + "_footrollbreakUI.py" in bpy.data.texts.keys():
 		bpy.data.texts.remove(bpy.data.texts[obj.data["rig_id"] + "_footrollbreakUI.py"])
 	text = bpy.data.texts.new(name=obj.data["rig_id"] + "_footrollbreakUI.py")
