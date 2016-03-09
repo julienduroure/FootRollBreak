@@ -29,13 +29,17 @@ class FootRollBreakUI(bpy.types.Panel):
 		row.prop(context.active_object.pose.bones["###bone###.L"], "footrollbreak", text="FootRoll Break (L)") 
 
 		if context.active_object.pose.bones["###bone###.L"].footrollbreak == True:
+			row = col.row()
 			row.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_angle"]', text="Angle")
+			row.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_angle_max"]', text="Angle Max")
 		
 		row = col.row()
 
 		row.prop(context.active_object.pose.bones["###bone###.R"], "footrollbreak", text="FootRoll Break (R)") 
 		if context.active_object.pose.bones["###bone###.R"].footrollbreak == True:
+			row = col.row()
 			row.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_angle"]', text="Angle")
+			row.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_angle_max"]', text="Angle Max")
 		
 		
 
