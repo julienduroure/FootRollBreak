@@ -17,6 +17,7 @@ def exec_patch_human(complexity):
 	
 	toe_name  = "ORG-toe"
 	foot_name = "foot.ik"
+	foot_def  = "DEF-foot"
 	roll_name = "foot_roll.ik" 
 	internal_roll_01 = "MCH-foot"
 	internal_roll_02 = ".rocker.01"		
@@ -24,6 +25,34 @@ def exec_patch_human(complexity):
 	driver_01_02 = ".roll.01"
 	driver_02_01 = "MCH-foot"
 	driver_02_02 = ".roll.02"
+
+# add UI
+	ui_text_ = ui_text.replace("###rig_id###", "\"" + obj.data["rig_id"] + "\"")
+	ui_text_ = ui_text_.replace("###bone###", foot_name)
+	if obj.data["rig_id"] + "_footrollbreakUI.py" in bpy.data.texts.keys():
+		bpy.data.texts.remove(bpy.data.texts[obj.data["rig_id"] + "_footrollbreakUI.py"])
+	text = bpy.data.texts.new(name=obj.data["rig_id"] + "_footrollbreakUI.py")
+	text.use_module = True
+	text.write(ui_text_)
+	exec(text.as_string(), {})
+
+	if complexity == "FULL":
+		driver_text_ = text_drivers.replace("###armature###", obj.name)
+		driver_text_ = driver_text_.replace("###a###", str(a)) 
+		driver_text_ = driver_text_.replace("###b###", str(b)) 
+		driver_text_ = driver_text_.replace("###c###", str(c)) 
+		driver_text_ = driver_text_.replace("###d###", str(d))
+		driver_text_ = driver_text_.replace("###toe_def###", toe_name)
+		driver_text_ = driver_text_.replace("###toe_top###", name_toe_top)
+		driver_text_ = driver_text_.replace("###foot_def###", foot_def)
+		
+
+		if obj.data["rig_id"] + "_footrollbreakDriver.py" in bpy.data.texts.keys():
+			bpy.data.texts.remove(bpy.data.texts[obj.data["rig_id"] + "_footrollbreakDriver.py"])
+		text = bpy.data.texts.new(name=obj.data["rig_id"] + "_footrollbreakDriver.py")
+		text.use_module = True
+		text.write(driver_text_)
+		exec(text.as_string(), {})
 			   
 	for side in [".L", ".R"]:
 		# Top toe bone
@@ -55,6 +84,9 @@ def exec_patch_human(complexity):
 		bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"][name_footrollbreak_angle] = {"min":0.0, "max":180.0}
 		bpy.context.active_object.pose.bones[foot_name+side][name_footrollbreak_angle] = default_footrollbreak_angle
 		bpy.context.active_object.pose.bones[foot_name+side].footrollbreak = default_footrollbreak
+		if complexity == "FULL":
+			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"][name_footrollbreak_angle_max] = {"min":0.0, "max":180.0}
+			bpy.context.active_object.pose.bones[foot_name+side][name_footrollbreak_angle_max] = default_footrollbreak_angle_max
 
 		#add constraint to top
 		bpy.ops.object.mode_set(mode='POSE')
@@ -74,6 +106,17 @@ def exec_patch_human(complexity):
 		limit.use_limit_x = True
 		limit.max_x 	  = math.pi / 2
 		limit.owner_space = 'LOCAL'
+
+		if complexity == "FULL":
+			transform = obj.pose.bones[top].constraints.new(type='TRANSFORM')
+			transform.target = obj
+			transform.subtarget = roll_name + side
+			transform.map_from = 'ROTATION'
+			#min & max will be set by drivers
+			transform.map_to = 'ROTATION'
+			#max will be set be driver
+			transform.target_space = 'LOCAL'
+			transform.owner_space = 'LOCAL'
 		
 		#create constraint on new roll bone
 		bpy.ops.pose.select_all(action='DESELECT')
@@ -94,7 +137,7 @@ def exec_patch_human(complexity):
 					driv.driver.variables[0].targets[0].data_path = "pose.bones[\"" + new_roll_name + "\"].rotation_euler[0]"
 				elif driv.data_path == "pose.bones[\"" + driver_02_01 + side + driver_02_02 + "\"].rotation_euler" and driv.array_index == 0:
 					driv.driver.variables[0].targets[0].data_path = "pose.bones[\"" + new_roll_name + "\"].rotation_euler[0]"
-		elif complexity == "CONSTRAINT":
+		elif complexity in ["CONSTRAINT","FULL"]:
 			#delete drivers
 			obj.pose.bones[driver_01_01 + side + driver_01_02].driver_remove("rotation_euler", 0)
 			obj.pose.bones[driver_02_01 + side + driver_02_02].driver_remove("rotation_euler", 0)	
@@ -145,7 +188,7 @@ def exec_patch_human(complexity):
 			targ.id = obj
 			targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footrollbreak"
 
-		elif complexity == "CONSTRAINT":
+		elif complexity in ["CONSTRAINT","FULL"]:
 			#add constraint
 			limit_rot = obj.pose.bones[new_roll_name].constraints.new(type="LIMIT_ROTATION")
 			limit_rot.use_limit_x = True
@@ -154,16 +197,43 @@ def exec_patch_human(complexity):
 			limit_rot.owner_space = 'LOCAL'
 
 			#add driver
-			fcurve = obj.pose.bones[new_roll_name].constraints[1].driver_add('max_x')
-			drv = fcurve.driver
-			drv.type = 'SCRIPTED'
-			drv.expression = "var*2*pi/360"
-			var = drv.variables.new()
-			var.name = 'var'
-			var.type = 'SINGLE_PROP'
-			targ = var.targets[0]
-			targ.id = obj
-			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_footrollbreak_angle + "\"]"
+			if complexity == "CONSTRAINT":
+				fcurve = obj.pose.bones[new_roll_name].constraints[1].driver_add('max_x')
+				drv = fcurve.driver
+				drv.type = 'SCRIPTED'
+				drv.expression = "var*2*pi/360"
+				var = drv.variables.new()
+				var.name = 'var'
+				var.type = 'SINGLE_PROP'
+				targ = var.targets[0]
+				targ.id = obj
+				targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_footrollbreak_angle + "\"]"
+			elif complexity == "FULL":
+				fcurve = obj.pose.bones[new_roll_name].constraints[1].driver_add('max_x')
+				drv = fcurve.driver
+				drv.type = 'SCRIPTED'
+				drv.expression = "driver_rollbreak(current_angle/(2*pi)*360, angle, angle_max)"
+				var = drv.variables.new()
+				var.name = 'angle'
+				var.type = 'SINGLE_PROP'
+				targ = var.targets[0]
+				targ.id = obj
+				targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_footrollbreak_angle + "\"]"
+				var = drv.variables.new()
+				var.name = 'angle_max'
+				var.type = 'SINGLE_PROP'
+				targ = var.targets[0]
+				targ.id = obj
+				targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_footrollbreak_angle_max + "\"]"
+				var = drv.variables.new()
+				var.name = 'current_angle'
+				var.type = 'TRANSFORMS'
+				targ = var.targets[0]
+				targ.transform_type = 'ROT_X'
+				targ.id = obj
+				targ.bone_target = roll_name + side
+				targ.transform_space = 'LOCAL_SPACE'
+				
 
 			fcurve = obj.pose.bones[new_roll_name].constraints[1].driver_add('influence')
 			drv = fcurve.driver
@@ -209,6 +279,51 @@ def exec_patch_human(complexity):
 		targ.id = obj
 		targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footrollbreak"
 
+		if complexity == "FULL":
+			fcurve = obj.pose.bones[top].constraints[2].driver_add('from_min_x_rot')
+			drv = fcurve.driver
+			drv.type = 'SCRIPTED'
+			drv.expression = "var*2*pi/360"
+			var = drv.variables.new()
+			var.name = 'var'
+			var.type = 'SINGLE_PROP'
+			targ = var.targets[0]
+			targ.id = obj
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_footrollbreak_angle + "\"]"
+
+			fcurve = obj.pose.bones[top].constraints[2].driver_add('from_max_x_rot')
+			drv = fcurve.driver
+			drv.type = 'SCRIPTED'
+			drv.expression = "var*2*pi/360"
+			var = drv.variables.new()
+			var.name = 'var'
+			var.type = 'SINGLE_PROP'
+			targ = var.targets[0]
+			targ.id = obj
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_footrollbreak_angle_max + "\"]"
+
+			fcurve = obj.pose.bones[top].constraints[2].driver_add('to_max_x_rot')
+			drv = fcurve.driver
+			drv.type = 'SCRIPTED'
+			drv.expression = "driver_rollbreak_return('" + side + "', angle)"
+			var = drv.variables.new()
+			var.name = 'angle'
+			var.type = 'SINGLE_PROP'
+			targ = var.targets[0]
+			targ.id = obj
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_footrollbreak_angle + "\"]"
+
+			fcurve = obj.pose.bones[top].constraints[2].driver_add('influence')
+			drv = fcurve.driver
+			drv.type = 'SCRIPTED'
+			drv.expression = "var"
+			var = drv.variables.new()
+			var.name = 'var'
+			var.type = 'SINGLE_PROP'
+			targ = var.targets[0]
+			targ.id = obj
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footrollbreak"
+			
 					
 		bpy.ops.object.mode_set(mode='EDIT')
 			

@@ -49,3 +49,34 @@ def unregister():
 	
 register()
 '''
+
+text_drivers = '''
+import bpy
+import math
+import mathutils
+
+def get_length_coeff(obj, side, toe_def, foot_def, toe_top):
+	return (obj.bones[toe_def + side].matrix_local.to_translation() - obj.bones[toe_top + side ].matrix_local.to_translation()).length / (obj.bones[foot_def + side].matrix_local.to_translation() - obj.bones[toe_def + side].matrix_local.to_translation()).length
+
+def driver_rollbreak(current_angle, angle, angle_max):
+    if current_angle <= angle:
+        return angle*2* math.pi/360
+    elif current_angle >= angle and current_angle < angle_max:
+        return (- angle / ( angle_max - angle ) * ( current_angle - angle_max) * 2 * math.pi / 360)
+    else:
+        return 0.0
+
+def driver_rollbreak_return(side, angle):
+    obj = bpy.data.armatures["###armature###"]
+    a = ###a###
+    b = ###b###
+    c = ###c###
+    d = ###d###
+    coeff_length =   get_length_coeff(obj, side, "###toe_def###", "###foot_def###", "###toe_top###")
+    slop         = a + b*coeff_length + c*coeff_length*coeff_length + d*coeff_length*coeff_length*coeff_length
+    return angle * slop * 2 *math.pi / 360
+
+bpy.app.driver_namespace["driver_rollbreak"] = driver_rollbreak
+bpy.app.driver_namespace["driver_rollbreak_return"] = driver_rollbreak_return
+
+'''
