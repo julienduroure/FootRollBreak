@@ -40,7 +40,7 @@ name_footrollbreak_angle_max = 	"footrollbreak_angle_max"
 default_footrollbreak_angle = 50.0
 default_footrollbreak_angle_max = 90.0
 default_footrollbreak       = False
-default_human_complexity = "DRIVER"
+default_human_complexity = "FULL"
 default_pitchipoy_complexity = "CONSTRAINT"
 
 

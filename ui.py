@@ -31,6 +31,15 @@ class DATA_PT_rigify_patch(bpy.types.Panel):
 					row.label(addonpref().pitchipoy_complexity)					
 		else:
 			self.layout.label("already patched!", icon="INFO")
+			if addonpref().debug == True:
+				row = self.layout.row()
+				row.label("length factor L:")
+				row = self.layout.row()
+				row.label(str(get_length_coeff(bpy.context.active_object.data, ".L", "ORG-toe", "DEF-foot", name_toe_top)))
+				row = self.layout.row()
+				row.label("length factor R:")
+				row = self.layout.row()
+				row.label(str(get_length_coeff(bpy.context.active_object.data, ".R", "ORG-toe", "DEF-foot", name_toe_top)))
 			
 def register():
 	bpy.utils.register_class(DATA_PT_rigify_patch)
