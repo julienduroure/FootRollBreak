@@ -5,6 +5,11 @@ Totally unstable for now. Please do not use :)
 
 # Version history
 
+## 0.9.0 (2016, Match 10th)
+
+* First complete version :)
+* Need to be tested, of course.
+
 ## 0.0.3 (2016, March 9th)
 
 * complete refactor (split source into files, addon prefs, ...)
