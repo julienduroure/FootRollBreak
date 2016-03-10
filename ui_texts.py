@@ -94,13 +94,16 @@ import mathutils
 def get_length_coeff(obj, side, toe_def, foot_def, toe_top):
 	return (obj.bones[toe_def + side].matrix_local.to_translation() - obj.bones[toe_top + side ].matrix_local.to_translation()).length / (obj.bones[foot_def + side].matrix_local.to_translation() - obj.bones[toe_def + side].matrix_local.to_translation()).length
 
-def driver_rollbreak(current_angle, angle, angle_max):
-    if current_angle <= angle:
-        return angle*2* math.pi/360
-    elif current_angle >= angle and current_angle < angle_max:
-        return (- angle / ( angle_max - angle ) * ( current_angle - angle_max) * 2 * math.pi / 360)
-    else:
-        return 0.0
+def driver_rollbreak(return_enable, current_angle, angle, angle_max):
+	if return_enable == True:
+		if current_angle <= angle:
+			return angle*2* math.pi/360
+		elif current_angle >= angle and current_angle < angle_max:
+			return (- angle / ( angle_max - angle ) * ( current_angle - angle_max) * 2 * math.pi / 360)
+		else:
+			return 0.0
+	else:
+		return angle*2* math.pi/360
 
 def driver_rollbreak_return(side, angle, corrective):
     obj = bpy.data.armatures["###armature###"]

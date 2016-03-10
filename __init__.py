@@ -34,12 +34,14 @@ import bpy
 
 def register():
 	bpy.types.PoseBone.footrollbreak = bpy.props.BoolProperty()
+	bpy.types.PoseBone.footrollbreak_return = bpy.props.BoolProperty()
 	addon_prefs.register()
 	ops.register()
 	ui.register()
 	
 def unregister():
 	del bpy.types.PoseBone.footrollbreak
+	del bpy.types.PoseBone.footrollbreak_return
 	addon_prefs.unregister()
 	ops.unregister()
 	ui.unregister()
