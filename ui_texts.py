@@ -24,64 +24,58 @@ class FootRollBreakUI(bpy.types.Panel):
 
 	def draw(self, context):
 		layout = self.layout
-		col = layout.column()
-		row = col.row()
-		row.prop(context.active_object.pose.bones["###bone###.L"], "footrollbreak", text="FootRoll Break (L)") 
+		row_ = layout.row()
+		row_.prop(context.active_object.pose.bones["###bone###.L"], "footrollbreak", text="FootRoll Break (L)") 
 
 		if context.active_object.pose.bones["###bone###.L"].footrollbreak == True:
 			if context.active_object.pose.bones["###bone_roll###.L"]["complexity"] == "FULL":
-				row = col.row()
+				row_ = layout.row()
+				box = row_.box()
+				row = box.row()
 				row.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_angle"]', text="Angle")
-				row.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_angle_max"]', text="Angle Max")
+				row = box.row()
+				col = row.column()
+				col.prop(context.active_object.pose.bones["###bone###.L"], "footrollbreak_return", text="Return")
+				col = row.column()
+				if context.active_object.pose.bones["###bone###.L"].footrollbreak_return == True:
+					row__ = col.row()
+					row__.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_angle_max"]', text="Angle Max")
+					row__ = col.row()
+					col.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_corrective_angle"]', text="Corrective")
+				
 			else:
-				row.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_angle"]', text="Angle")
+				row_.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_angle"]', text="Angle")
 		
-		row = col.row()
+		row_ = layout.row()
 
-		row.prop(context.active_object.pose.bones["###bone###.R"], "footrollbreak", text="FootRoll Break (R)") 
+		row_.prop(context.active_object.pose.bones["###bone###.R"], "footrollbreak", text="FootRoll Break (R)") 
+
 		if context.active_object.pose.bones["###bone###.R"].footrollbreak == True:
 			if context.active_object.pose.bones["###bone_roll###.R"]["complexity"] == "FULL":
-				row = col.row()
+				row_ = layout.row()
+				box = row_.box()
+				row = box.row()
 				row.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_angle"]', text="Angle")
-				row.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_angle_max"]', text="Angle Max")
+				row = box.row()
+				col = row.column()
+				col.prop(context.active_object.pose.bones["###bone###.R"], "footrollbreak_return", text="Return")
+				col = row.column()
+				if context.active_object.pose.bones["###bone###.R"].footrollbreak_return == True:
+					row__ = col.row()
+					row__.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_angle_max"]', text="Angle Max")
+					row__ = col.row()
+					col.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_corrective_angle"]', text="Corrective")
+				
 			else:
-				row.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_angle"]', text="Angle")
-		
-class FootRollBreakCorrectiveUI(bpy.types.Panel):
+				row_.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_angle"]', text="Angle")
 
-	bl_space_type = 'PROPERTIES'
-	bl_region_type = 'WINDOW'
-	bl_context = "data"
-	bl_label = "FootRoll Break Corrective"
-	bl_idname = rig_id + "_PT_FootRollBreakCorrective_ui"
-
-
-	@classmethod
-	def poll(self, context):
-		if context.mode != 'POSE':
-			return False
-
-		try:
-			return (context.active_object.data.get("rig_id") == rig_id)
-		except (AttributeError, KeyError, TypeError):
-			return False
-		
-
-	def draw(self, context):
-		row = self.layout.row()
-		row.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_corrective_angle"]', text="Corrective Angle L")
-		row = self.layout.row()
-		row.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_corrective_angle"]', text="Corrective Angle R")
 
 def register():
 	bpy.utils.register_class(FootRollBreakUI)
-	bpy.utils.register_class(FootRollBreakCorrectiveUI)
 	
 def unregister():
 	bpy.utils.unregister_class(FootRollBreakUI)
-	bpy.utils.unregister_class(FootRollBreakCorrectiveUI)
 
-	
 	
 register()
 '''

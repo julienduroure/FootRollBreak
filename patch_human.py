@@ -26,16 +26,6 @@ def exec_patch_human(complexity):
 	driver_02_01 = "MCH-foot"
 	driver_02_02 = ".roll.02"
 
-# add UI
-	ui_text_ = ui_text.replace("###rig_id###", "\"" + obj.data["rig_id"] + "\"")
-	ui_text_ = ui_text_.replace("###bone###", foot_name)
-	if obj.data["rig_id"] + "_footrollbreakUI.py" in bpy.data.texts.keys():
-		bpy.data.texts.remove(bpy.data.texts[obj.data["rig_id"] + "_footrollbreakUI.py"])
-	text = bpy.data.texts.new(name=obj.data["rig_id"] + "_footrollbreakUI.py")
-	text.use_module = True
-	text.write(ui_text_)
-	exec(text.as_string(), {})
-
 	if complexity == "FULL":
 		driver_text_ = text_drivers.replace("###armature###", obj.name)
 		driver_text_ = driver_text_.replace("###a###", str(a)) 
@@ -366,4 +356,4 @@ def exec_patch_human(complexity):
 	text.write(ui_text_)
 	exec(text.as_string(), {})
 	return {'FINISHED'}
-	
+		
