@@ -76,7 +76,7 @@ def driver_rollbreak(current_angle, angle, angle_max):
     else:
         return 0.0
 
-def driver_rollbreak_return(side, angle):
+def driver_rollbreak_return(side, angle, corrective):
     obj = bpy.data.armatures["###armature###"]
     a = ###a###
     b = ###b###
@@ -84,7 +84,7 @@ def driver_rollbreak_return(side, angle):
     d = ###d###
     coeff_length =   get_length_coeff(obj, side, "###toe_def###", "###foot_def###", "###toe_top###")
     slop         = a + b*coeff_length + c*coeff_length*coeff_length + d*coeff_length*coeff_length*coeff_length
-    return angle * slop * 2 *math.pi / 360
+    return (angle + corrective) * slop * 2 *math.pi / 360
 
 bpy.app.driver_namespace["driver_rollbreak"] = driver_rollbreak
 bpy.app.driver_namespace["driver_rollbreak_return"] = driver_rollbreak_return

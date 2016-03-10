@@ -36,9 +36,11 @@ name_toe_top           = "toe-top"
 
 name_footrollbreak_angle = 	"footrollbreak_angle"
 name_footrollbreak_angle_max = 	"footrollbreak_angle_max"
+name_corrective_return_angle = "corrective_return_angle"
 
 default_footrollbreak_angle = 50.0
 default_footrollbreak_angle_max = 90.0
+default_corrective_return_angle = 0.0
 default_footrollbreak       = False
 default_human_complexity = "FULL"
 default_pitchipoy_complexity = "CONSTRAINT"

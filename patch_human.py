@@ -85,6 +85,8 @@ def exec_patch_human(complexity):
 		bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"][name_footrollbreak_angle] = {"min":0.0, "max":180.0}
 		bpy.context.active_object.pose.bones[foot_name+side][name_footrollbreak_angle] = default_footrollbreak_angle
 		bpy.context.active_object.pose.bones[foot_name+side].footrollbreak = default_footrollbreak
+		bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"][name_corrective_return_angle] = {"min":-180.0, "max":180.0}
+		bpy.context.active_object.pose.bones[foot_name+side][name_corrective_return_angle] = default_corrective_return_angle
 		if complexity == "FULL":
 			bpy.context.active_object.pose.bones[foot_name+side]["_RNA_UI"][name_footrollbreak_angle_max] = {"min":0.0, "max":180.0}
 			bpy.context.active_object.pose.bones[foot_name+side][name_footrollbreak_angle_max] = default_footrollbreak_angle_max
@@ -306,13 +308,19 @@ def exec_patch_human(complexity):
 			fcurve = obj.pose.bones[top].constraints[2].driver_add('to_max_x_rot')
 			drv = fcurve.driver
 			drv.type = 'SCRIPTED'
-			drv.expression = "driver_rollbreak_return('" + side + "', angle)"
+			drv.expression = "driver_rollbreak_return('" + side + "', angle, corrective)"
 			var = drv.variables.new()
 			var.name = 'angle'
 			var.type = 'SINGLE_PROP'
 			targ = var.targets[0]
 			targ.id = obj
 			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_footrollbreak_angle + "\"]"
+			var = drv.variables.new()
+			var.name = 'corrective'
+			var.type = 'SINGLE_PROP'
+			targ = var.targets[0]
+			targ.id = obj
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_corrective_return_angle + "\"]"
 
 			fcurve = obj.pose.bones[top].constraints[2].driver_add('influence')
 			drv = fcurve.driver
