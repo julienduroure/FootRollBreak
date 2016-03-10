@@ -3,6 +3,10 @@ import bpy
 
 rig_id = ###rig_id###
 
+bpy.types.PoseBone.footrollbreak = bpy.props.BoolProperty()
+bpy.types.PoseBone.footrollbreak_return = bpy.props.BoolProperty()
+
+
 class FootRollBreakUI(bpy.types.Panel):
 
 	bl_space_type = 'VIEW_3D'

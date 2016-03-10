@@ -40,8 +40,6 @@ def register():
 	ui.register()
 	
 def unregister():
-	del bpy.types.PoseBone.footrollbreak
-	del bpy.types.PoseBone.footrollbreak_return
 	addon_prefs.unregister()
 	ops.unregister()
 	ui.unregister()
