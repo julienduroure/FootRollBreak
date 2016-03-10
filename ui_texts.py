@@ -47,13 +47,39 @@ class FootRollBreakUI(bpy.types.Panel):
 			else:
 				row.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_angle"]', text="Angle")
 		
+class FootRollBreakCorrectiveUI(bpy.types.Panel):
+
+	bl_space_type = 'PROPERTIES'
+	bl_region_type = 'WINDOW'
+	bl_context = "data"
+	bl_label = "FootRoll Break Corrective"
+	bl_idname = rig_id + "_PT_FootRollBreakCorrective_ui"
+
+
+	@classmethod
+	def poll(self, context):
+		if context.mode != 'POSE':
+			return False
+
+		try:
+			return (context.active_object.data.get("rig_id") == rig_id)
+		except (AttributeError, KeyError, TypeError):
+			return False
 		
+
+	def draw(self, context):
+		row = self.layout.row()
+		row.prop(context.active_object.pose.bones["###bone###.L"], '["footrollbreak_corrective_angle"]', text="Corrective Angle L")
+		row = self.layout.row()
+		row.prop(context.active_object.pose.bones["###bone###.R"], '["footrollbreak_corrective_angle"]', text="Corrective Angle R")
 
 def register():
 	bpy.utils.register_class(FootRollBreakUI)
+	bpy.utils.register_class(FootRollBreakCorrectiveUI)
 	
 def unregister():
 	bpy.utils.unregister_class(FootRollBreakUI)
+	bpy.utils.unregister_class(FootRollBreakCorrectiveUI)
 
 	
 	
@@ -84,7 +110,7 @@ def driver_rollbreak_return(side, angle, corrective):
     d = ###d###
     coeff_length =   get_length_coeff(obj, side, "###toe_def###", "###foot_def###", "###toe_top###")
     slop         = a + b*coeff_length + c*coeff_length*coeff_length + d*coeff_length*coeff_length*coeff_length
-    return (angle + corrective) * slop * 2 *math.pi / 360
+    return (angle * slop + corrective) * 2 *math.pi / 360
 
 bpy.app.driver_namespace["driver_rollbreak"] = driver_rollbreak
 bpy.app.driver_namespace["driver_rollbreak_return"] = driver_rollbreak_return
