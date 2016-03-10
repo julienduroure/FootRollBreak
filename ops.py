@@ -21,7 +21,9 @@ class PatchRigify(bpy.types.Operator):
 		elif rigify_type == 'Pitchipoy':
 			return exec_patch_pitchipoy(addonpref().pitchipoy_complexity)
 		else: 
-			pass #TODO message unknown
+			#should'nt happen because of poll of UI panel, but just in case ... error message
+			self.report({'ERROR'}, error_message)
+			return {'CANCELLED'}
 
 def register():
 	bpy.utils.register_class(PatchRigify)

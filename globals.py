@@ -45,7 +45,7 @@ default_corrective_return_angle = 0.0
 default_footrollbreak       = False
 default_footrollbreak_return = True
 default_human_complexity = "FULL"
-default_pitchipoy_complexity = "CONSTRAINT"
+default_pitchipoy_complexity = "FULL"
 
 
 a = 1.00366
@@ -56,3 +56,5 @@ d = -0.0265
 def addonpref():
 	user_preferences = bpy.context.user_preferences
 	return user_preferences.addons[__package__].preferences
+	
+error_message = "Unknown Rigify MetaRig"
