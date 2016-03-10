@@ -319,20 +319,17 @@ def exec_patch_human(complexity):
 			targ.id = obj
 			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_corrective_return_angle + "\"]"
 
-		fcurve = obj.pose.bones[top].constraints[2].driver_add('influence')
-		drv = fcurve.driver
-		drv.type = 'SCRIPTED'
-		if complexity in ["DRIVER", "CONSTRAINT"]:
+			fcurve = obj.pose.bones[top].constraints[2].driver_add('influence')
+			drv = fcurve.driver
+			drv.type = 'SCRIPTED'
 			drv.expression = "rollbreak"
-		elif complexity == "FULL":
 			drv.expression = "rollbreak * return_enable"
-		var = drv.variables.new()
-		var.name = 'rollbreak'
-		var.type = 'SINGLE_PROP'
-		targ = var.targets[0]
-		targ.id = obj
-		targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footrollbreak"
-		if complexity == "FULL":
+			var = drv.variables.new()
+			var.name = 'rollbreak'
+			var.type = 'SINGLE_PROP'
+			targ = var.targets[0]
+			targ.id = obj
+			targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footrollbreak"
 			var = drv.variables.new()
 			var.name = 'return_enable'
 			var.type = 'SINGLE_PROP'
