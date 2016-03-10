@@ -10,6 +10,7 @@ human_complexity_items = [
 		
 pitchipoy_complexity_items = [
 		("CONSTRAINT", "Constraint", "", 1),
+		("FULL", "Full", "", 2),
 		]
 		
 		
