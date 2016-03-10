@@ -106,7 +106,7 @@ def exec_patch_pitchipoy(complexity):
 		limit.use_limit_x = True
 		limit.use_limit_y = True
 		limit.use_limit_z = True
-		limit.max_x 	  = math.pi #TODO : is math.pi / 2 is human_patch...
+		limit.max_x 	  = math.pi
 		limit.owner_space = 'LOCAL'
 		
 		if complexity == "FULL":
@@ -132,7 +132,7 @@ def exec_patch_pitchipoy(complexity):
 
 		limit_rot = obj.pose.bones[new_roll_name].constraints.new(type='LIMIT_ROTATION')
 		limit_rot.use_limit_x = True
-		limit_rot.min_x = - 2 * math.pi #TODO : is - math.pi on human_patch
+		limit_rot.min_x = - 2 * math.pi
 		limit_rot.owner_space = 'LOCAL'
 
 		#change existing constraints

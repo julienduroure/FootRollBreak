@@ -98,7 +98,7 @@ def exec_patch_human(complexity):
 			
 		limit = obj.pose.bones[top].constraints.new(type='LIMIT_ROTATION')
 		limit.use_limit_x = True
-		limit.max_x 	  = math.pi / 2
+		limit.max_x 	  = math.pi
 		limit.owner_space = 'LOCAL'
 
 		if complexity == "FULL":
@@ -186,7 +186,7 @@ def exec_patch_human(complexity):
 			#add constraint
 			limit_rot = obj.pose.bones[new_roll_name].constraints.new(type="LIMIT_ROTATION")
 			limit_rot.use_limit_x = True
-			limit_rot.min_x = - math.pi
+			limit_rot.min_x = - 2 * math.pi
 			limit_rot.max_x = 0 #will be set be driver
 			limit_rot.owner_space = 'LOCAL'
 
