@@ -40,6 +40,7 @@ def register():
 	ui.register()
 	
 def unregister():
+	#Do not del BoolProperty : needed for footbreakroll still working after removing addon
 	addon_prefs.unregister()
 	ops.unregister()
 	ui.unregister()

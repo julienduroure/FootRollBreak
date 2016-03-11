@@ -25,13 +25,16 @@ def check_rigify_type(obj):
 		return 'UNKNOWN'
 
 def is_already_patched(obj):
-	bone = "ORG-foot_roll.ik.L"
+	bone = "ORG-foot_roll.ik.L" #This is a bone addon will add. If already here --> Rig is already patched
 	return bone in obj.data.bones
 
 #any modification on this function must be duplicate on ui_texts
+#Here, this function is only used by debug system to display length coeff
+#Real use of this function is on ui_texts, that is unsed into driver function
 def get_length_coeff(obj, side, toe_def, foot_def, toe_top):
 	return  (obj.bones[toe_def + side].matrix_local.to_translation() - obj.bones[toe_top + side ].matrix_local.to_translation()).length / (obj.bones[foot_def + side].matrix_local.to_translation() - obj.bones[toe_def + side].matrix_local.to_translation()).length
     
+#Some names of created bones & properties
 name_intermediate_roll = "ORG-foot_roll.ik"
 name_toe_top           = "toe-top"
 
@@ -39,6 +42,7 @@ name_footrollbreak_angle = 	"footrollbreak_angle"
 name_footrollbreak_angle_max = 	"footrollbreak_angle_max"
 name_corrective_return_angle = "footrollbreak_corrective_angle"
 
+#Some default values
 default_footrollbreak_angle = 50.0
 default_footrollbreak_angle_max = 90.0
 default_corrective_return_angle = 0.0
@@ -47,14 +51,16 @@ default_footrollbreak_return = True
 default_human_complexity = "FULL"
 default_pitchipoy_complexity = "FULL"
 
-
+#Coeff used by compensate rotation during return (full method)
 a = 1.00366
 b = -0.68879
 c = 0.21013
 d = -0.0265
 
+#shortcut to prefs
 def addonpref():
 	user_preferences = bpy.context.user_preferences
 	return user_preferences.addons[__package__].preferences
 	
+#Error message display
 error_message = "Unknown Rigify MetaRig"

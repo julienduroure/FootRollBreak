@@ -30,6 +30,7 @@ def exec_patch_pitchipoy(complexity):
 	shoulder_wgt        = "shoulder.L"
 	parenting_name      = "MCH-thigh_ik_target"
 	
+	#Create text for drivers
 	if complexity == "FULL":
 		driver_text_ = text_drivers.replace("###armature###", obj.name)
 		driver_text_ = driver_text_.replace("###a###", str(a)) 
@@ -110,6 +111,7 @@ def exec_patch_pitchipoy(complexity):
 		limit.owner_space = 'LOCAL'
 		
 		if complexity == "FULL":
+			#Return system
 			transform = obj.pose.bones[top].constraints.new(type='TRANSFORM')
 			transform.target = obj
 			transform.subtarget = roll_name + side
@@ -156,6 +158,7 @@ def exec_patch_pitchipoy(complexity):
 			targ.id = obj
 			targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_footrollbreak_angle + "\"]"
 		elif complexity == "FULL":
+			#Return system
 			fcurve = obj.pose.bones[new_roll_name].constraints[1].driver_add('max_x')
 			drv = fcurve.driver
 			drv.type = 'SCRIPTED'
@@ -187,6 +190,7 @@ def exec_patch_pitchipoy(complexity):
 			targ.bone_target = roll_name + side
 			targ.transform_space = 'LOCAL_SPACE'
 			
+		#on / off
 		fcurve = obj.pose.bones[new_roll_name].constraints[1].driver_add('influence')
 		drv = fcurve.driver
 		drv.type = 'SCRIPTED'
@@ -221,6 +225,7 @@ def exec_patch_pitchipoy(complexity):
 		targ.id = obj
 		targ.data_path = "pose.bones[\"" + foot_name + side + "\"][\"" + name_footrollbreak_angle + "\"]"
 
+		#On / Off
 		fcurve = obj.pose.bones[top].constraints[0].driver_add('influence')
 		drv = fcurve.driver
 		drv.type = 'SCRIPTED'
@@ -233,6 +238,7 @@ def exec_patch_pitchipoy(complexity):
 		targ.data_path = "pose.bones[\"" + foot_name + side + "\"].footrollbreak"
 		
 		if complexity == "FULL":
+			#Return System
 			fcurve = obj.pose.bones[top].constraints[2].driver_add('from_min_x_rot')
 			drv = fcurve.driver
 			drv.type = 'SCRIPTED'

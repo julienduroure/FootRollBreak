@@ -3,6 +3,7 @@ import bpy
 
 rig_id = ###rig_id###
 
+#Needed for footbreakroll still working after removing addon
 bpy.types.PoseBone.footrollbreak = bpy.props.BoolProperty()
 bpy.types.PoseBone.footrollbreak_return = bpy.props.BoolProperty()
 
@@ -92,6 +93,7 @@ import mathutils
 def get_length_coeff(obj, side, toe_def, foot_def, toe_top):
 	return (obj.bones[toe_def + side].matrix_local.to_translation() - obj.bones[toe_top + side ].matrix_local.to_translation()).length / (obj.bones[foot_def + side].matrix_local.to_translation() - obj.bones[toe_def + side].matrix_local.to_translation()).length
 
+#Driver used by intermediate roll bone to follow anim roll bone (and back in case of return full method)
 def driver_rollbreak(return_enable, current_angle, angle, angle_max):
 	if return_enable == True:
 		if current_angle <= angle:
@@ -103,6 +105,7 @@ def driver_rollbreak(return_enable, current_angle, angle, angle_max):
 	else:
 		return angle*2* math.pi/360
 
+#Driver used by Top toe bone to compensate return of intermediate roll bone
 def driver_rollbreak_return(side, angle, corrective):
     obj = bpy.data.armatures["###armature###"]
     a = ###a###
