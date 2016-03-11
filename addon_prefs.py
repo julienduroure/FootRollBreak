@@ -15,13 +15,15 @@ class RigifyPatchPreferences(bpy.types.AddonPreferences):
 		row_global    = layout.row()
 		
 		col = row_global.column()
-		row    = col.row()
-		row.prop(self, "human_complexity", text="Human complexity")
-		row    = col.row()
-		row.prop(self, "pitchipoy_complexity", text="Pitchipoy complexity")
-		col = row_global.column()
 		row = col.row()
 		row.prop(self, "debug", text="Debug mode")
+		col = row_global.column()
+		if self.debug == True:
+			row    = col.row()
+			row.prop(self, "human_complexity", text="Human complexity")
+			row    = col.row()
+			row.prop(self, "pitchipoy_complexity", text="Pitchipoy complexity")
+		
 		
 		
 		
