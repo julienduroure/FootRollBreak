@@ -42,6 +42,8 @@ name_footrollbreak_angle = 	"footrollbreak_angle"
 name_footrollbreak_angle_max = 	"footrollbreak_angle_max"
 name_corrective_return_angle = "footrollbreak_corrective_angle"
 
+name_rig_ui_text = "rig_ui.py"
+
 #Some default values
 default_footrollbreak_angle = 50.0
 default_footrollbreak_angle_max = 90.0
