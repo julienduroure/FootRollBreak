@@ -2,6 +2,8 @@
 Patch Existing Rigify Rigs to add FootRoll Break
 
 Totally unstable for now. Please do not use :)
+This is now a private repo, no problem :)
+Will be set to public for v1.0 version ;-)
 
 # Version history
 
