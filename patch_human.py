@@ -28,7 +28,7 @@ def exec_patch_human(complexity):
 
 	#Prepare text for drivers
 	if complexity == "FULL":
-		driver_text_ = text_drivers.replace("###armature###", obj.name)
+		driver_text_ = text_drivers.replace("###armature###", obj.data.name)
 		driver_text_ = driver_text_.replace("###a###", str(a)) 
 		driver_text_ = driver_text_.replace("###b###", str(b)) 
 		driver_text_ = driver_text_.replace("###c###", str(c)) 
@@ -358,4 +358,3 @@ def exec_patch_human(complexity):
 	text.write(ui_text_)
 	exec(text.as_string(), {})
 	return {'FINISHED'}
-		
