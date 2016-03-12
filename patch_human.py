@@ -359,15 +359,18 @@ def exec_patch_human(complexity):
 	exec(text.as_string(), {})
 
 	#update Rigify UI
-	lines = []
-	for line in bpy.data.texts[name_rig_ui_text].lines:
-		lines.append(line.body)
-	bpy.data.texts.remove(bpy.data.texts[name_rig_ui_text])
-	lines.insert(527, "        ik_leg.append('" + name_toe_top + ".L') #FootRollBreak")
-	lines.insert(573, "        ik_leg.append('" + name_toe_top + ".R') #FootRollBreak")
-	text = bpy.data.texts.new(name_rig_ui_text)
-	text.use_module = True
-	text.write("\n".join(lines))
-	exec(text.as_string(), {})
+	try: #TODO : lines number can changes when you don't have all rigify (for example, no body, only legs)
+		lines = []
+		for line in bpy.data.texts[name_rig_ui_text].lines:
+			lines.append(line.body)
+		bpy.data.texts.remove(bpy.data.texts[name_rig_ui_text])
+		lines.insert(527, "        ik_leg.append('" + name_toe_top + ".L') #FootRollBreak")
+		lines.insert(573, "        ik_leg.append('" + name_toe_top + ".R') #FootRollBreak")
+		text = bpy.data.texts.new(name_rig_ui_text)
+		text.use_module = True
+		text.write("\n".join(lines))
+		exec(text.as_string(), {})
+	except:
+		print("Error during patching rig_ui.py")
 
 	return {'FINISHED'}
