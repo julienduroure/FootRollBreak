@@ -359,13 +359,18 @@ def exec_patch_human(complexity):
 	exec(text.as_string(), {})
 
 	#update Rigify UI
-	try: #TODO : lines number can changes when you don't have all rigify (for example, no body, only legs)
+	try:
 		lines = []
+		extract = []
+		cpt = 0
 		for line in bpy.data.texts[name_rig_ui_text].lines:
 			lines.append(line.body)
+			if line.body[:14] == "        ik_leg":
+				extract.append(cpt)
+			cpt = cpt + 1
 		bpy.data.texts.remove(bpy.data.texts[name_rig_ui_text])
-		lines.insert(527, "        ik_leg.append('" + name_toe_top + ".L') #FootRollBreak")
-		lines.insert(573, "        ik_leg.append('" + name_toe_top + ".R') #FootRollBreak")
+		lines.insert(extract[0] + 1, "        ik_leg.append('" + name_toe_top + ".L') #FootRollBreak")
+		lines.insert(extract[1] + 2, "        ik_leg.append('" + name_toe_top + ".R') #FootRollBreak")
 		text = bpy.data.texts.new(name_rig_ui_text)
 		text.use_module = True
 		text.write("\n".join(lines))
