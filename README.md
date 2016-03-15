@@ -1,28 +1,20 @@
 # rigify_rollbreak_patch
 Patch Existing Rigify Rigs to add FootRoll Break
 
-Totally unstable for now. Please do not use :)
-This is now a private repo, no problem :)
-Will be set to public for v1.0 version ;-)
+# How to use it ?
+A complete documentation is available here : [FootRollBreak documentation](http://julienduroure.com/footrollbreak).
+If here a minimal quick guide:
+
+* Install FootRollBreak addon, and activate it.
+* Select your rigify rig, and got to armature data properties. A new panel is there :)
+* Patch your rig
+* A new panel can be found on 3D View properties panels (N), near other rigify panels.
+* That's it ! Enjoy :)
+* FootRollBreak will remain enabled on your rig, even if you disable/remove the addon.
+
 
 # Version history
 
-## 0.9.0 (2016, Match 10th)
+## 1.0.0 (2016, Match 15th)
 
-* First complete version :)
-* Need to be tested, of course.
-
-## 0.0.3 (2016, March 9th)
-
-* complete refactor (split source into files, addon prefs, ...)
-
-## 0.0.2 (2016, March 6th)
-
-* driver/constraint option for Human rig
-
-## 0.0.1 (2016, March 5th)
-
-* Initial Work
-* Human has some lags on old/current depsgraph, but works on new depsgraph
-* Human : footroll based on drivers, as current rigify footroll
-* Pitchipoy : footroll based on constraints, as current rigify footroll
+Initial release
