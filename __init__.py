@@ -24,7 +24,7 @@
 bl_info = {
 	"name": "Add FootRoll Break to Rigify",
 	"author": "Julien Duroure",
-	"version": (0, 9, 0),
+	"version": (1, 0, 0),
 	"blender": (2,77, 0),
 	"description": "Add FootRoll Break to Rigify",
 	"location": "Armature Properties, View 3D Properties",
