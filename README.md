@@ -1,7 +1,7 @@
 # rigify_rollbreak_patch
 Patch Existing Rigify Rigs to add FootRoll Break
 
-![FootRollBreak](doc/footrollbreak_steps?raw=true "FootRollBreak")
+![FootRollBreak](doc/footrollbreak_steps.png?raw=true "FootRollBreak")
 
 # How to use it ?
 A complete documentation is available here : [FootRollBreak documentation](http://julienduroure.com/footrollbreak).
