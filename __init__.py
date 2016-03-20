@@ -29,7 +29,7 @@ bl_info = {
 	"description": "Add FootRoll Break to Rigify",
 	"location": "Armature Properties, View 3D Properties",
 	"wiki_url": "http://julienduroure.com/footrollbreak/",
-	"tracker_url": "https://github.com/julienduroure/rigify_rollbreak_patch",
+	"tracker_url": "https://github.com/julienduroure/FootRollBreak",
 	"category": "Rigging",   
 }
 
