@@ -15,8 +15,7 @@ If here a minimal quick guide:
 * FootRollBreak will remain enabled on your rig, even if you disable/remove the addon.
 
 
-# Version history
+# How to help ?
+Buy me a coffee!  
 
-## 1.0.0 (2016, Match 15th)
-
-Initial release
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VTKPLVRP3VV7J)
