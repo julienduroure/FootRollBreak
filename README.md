@@ -4,7 +4,7 @@ Patch Existing Rigify Rigs to add FootRoll Break
 ![FootRollBreak](doc/footrollbreak_steps.png)
 
 # How to use it ?
-A complete documentation is available here : [FootRollBreak documentation](http://julienduroure.com/footrollbreak).
+A complete documentation is available here : [FootRollBreak documentation](http://BleRiFa.com/tools/FootRollBreak/).
 If here a minimal quick guide:
 
 * Install FootRollBreak addon, and activate it.
